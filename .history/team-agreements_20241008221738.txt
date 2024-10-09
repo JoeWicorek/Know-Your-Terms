@@ -1,0 +1,26 @@
+Team Agreements
+
+    Communication
+    We will use messages for communication. Updates will be shared during weekly meetings. 
+    For urgent issues, we will usephone or direct messages.
+
+    Meeting Schedule
+    Meetings will happen twice a week during class. Everyone is expected to attend unless they provide notice in advance.
+
+    Decision-Making
+    Decisions will be made through voting or agreement in team discussions. For urgent decisions,  group chat voting will be used.
+
+    Task Distribution
+    Tasks will be assigned based on skills and preferences. If someone feels overwhelmed, they should communicate it. Everyone is responsible for tracking their progress and keeping the team updated.
+
+    Conflict Resolution
+    If conflicts arise, they will be discussed within the team. If not resolved, we will seek help  from a professor or TA.
+
+    Code and Repository Management
+    We will use  Git  for coding. Team members will follow these rules:
+        Use clear commit messages.
+        At least one other person must review pull requests before merging.
+
+    Milestone Reflection
+    After each milestone, we will reflect on what went well and where we can improve. This will guide adjustments to our agreements.
+
