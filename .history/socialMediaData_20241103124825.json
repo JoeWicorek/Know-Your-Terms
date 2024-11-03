@@ -1,0 +1,27 @@
+[
+    {
+        "platform": "Facebook",
+        "infoCount": 10,
+        "infoCollected": ["Location", "Interests", "Posts", "Friends", "Messages"]
+    },
+    {
+        "platform": "Google",
+        "infoCount": 9,
+        "infoCollected": ["Search History", "Location", "Interests"]
+    },
+    {
+        "platform": "Twitter",
+        "infoCount": 7,
+        "infoCollected": ["Tweets", "Location", "Engagement Metrics"]
+    },
+    {
+        "platform": "Instagram",
+        "infoCount": 8,
+        "infoCollected": ["Photos", "Videos", "Interactions"]
+    },
+    {
+        "platform": "TikTok",
+        "infoCount": 6,
+        "infoCollected": ["Videos", "Location", "Device Info"]
+    }
+]

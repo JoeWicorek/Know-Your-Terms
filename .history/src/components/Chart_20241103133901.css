@@ -1,0 +1,33 @@
+/* ChartWithImages.css */
+
+/* Outer container to center the chart */
+.chart-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Inner container for the chart items */
+.chart {
+    width: 400px;
+}
+
+/* Styling each row in the chart */
+.chart-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+/* Styling for each image */
+.chart-item img {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+}
+
+/* Styling for the info count to align it to the right */
+.info-count {
+    margin-left: auto;
+}
