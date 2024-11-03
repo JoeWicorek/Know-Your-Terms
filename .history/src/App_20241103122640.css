@@ -1,0 +1,17 @@
+/* Global Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #F4F4F9;  /* Light Gray Background */
+    color: #333333;  /* Dark Gray Text */
+}
+
+h1, h2, h3 {
+    color: #4A90E2;  /* Primary Blue */
+}
+
+p {
+    color: #333333;  /* Dark Gray Text */
+    line-height: 1.6;
+}

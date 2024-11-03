@@ -1,0 +1,24 @@
+/* Button Styling */
+.button {
+    background-color: #00796B;  /* Teal Accent */
+    color: #ffffff;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.button:hover {
+    background-color: #26A69A;  /* Lighter Teal on hover */
+}
+
+.button-primary {
+    background-color: #F5C518;  /* Muted Yellow for special actions */
+    color: #333333;
+}
+
+.button-primary:hover {
+    background-color: #e0b014;
+}

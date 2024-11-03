@@ -1,0 +1,30 @@
+/* Navbar Styling */
+nav {
+    background-color: gr;  /* Primary Blue */
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 1rem;
+}
+
+nav ul li {
+    color: #ffffff;
+}
+
+nav ul li a {
+    color: #ffffff;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    transition: background-color 0.3s ease;
+}
+
+nav ul li a:hover {
+    background-color: #3B5998;  /* Darker Blue on hover */
+    border-radius: 5px;
+}
