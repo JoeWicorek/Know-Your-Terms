@@ -1,0 +1,32 @@
+.navbar-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f9f9f9;
+    padding: 1rem;
+    border-bottom: 1px solid #2D789E;
+}
+
+.navbar-company-name {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #2D789E;
+    text-align: left;
+}
+
+nav ul {
+    display: flex;
+    list-style-type: none;
+    gap: 1.5rem;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #2D789E;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+nav ul li a:hover {
+    color: #1a5d7e;
+}

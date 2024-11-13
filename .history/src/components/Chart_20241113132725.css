@@ -1,0 +1,117 @@
+/* About.css */
+
+.about-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px;
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #FFFFFF;
+  }
+  
+  .title {
+    font-size: 3em;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 40px;
+    color: #333;
+  }
+  
+  .highlight {
+    color: #007BFF;
+    font-style: italic;
+  }
+  
+  .mission {
+    margin-bottom: 60px;
+  }
+  
+  .mission h2 {
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .mission p {
+    font-size: 1.2em;
+    color: #555;
+  }
+  
+  .link {
+    color: #007BFF;
+    text-decoration: underline;
+  }
+  
+  .letter-grades {
+    margin-bottom: 60px;
+  }
+  
+  .letter-grades h2 {
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .letter-grades p {
+    font-size: 1.2em;
+    margin-bottom: 30px;
+    color: #555;
+  }
+  
+  .grade-scale {
+    position: relative;
+    margin-left: 0;
+    height: 80px;
+    background: linear-gradient(to right, #4CAF50, #CDDC39, #FFEB3B, #FFC107, #FF5722);
+    border-radius: 20px;
+    margin-top: 40px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    overflow: hidden;
+  }
+  
+  .grade-label.on-scale {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: bold;
+    color: #333;
+    font-size: 1rem;
+  }
+  
+  .grades {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 30px 0;
+  }
+  
+  .grade {
+    width: 18%;
+    text-align: center;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #F0F0F0;
+  }
+  
+  .grade-label {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .grade-factors {
+    list-style-type: none;
+    padding-left: 0;
+  }
+  
+  .grade-factors li {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+    color: #555;
+  }
+  

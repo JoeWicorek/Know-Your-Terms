@@ -1,0 +1,5 @@
+/* Chart.css */
+.chart {
+    width: 100%;  /* Makes the chart fill the container */
+    height: auto; /* Optional: adjust if height needs to be set */
+}

@@ -1,0 +1,43 @@
+/* chart.css */
+
+/* Centering container */
+.chart-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Full viewport height for vertical centering */
+    background-color: #f0f0f0; /* Light background color for contrast */
+}
+
+/* Chart styling */
+.chart {
+    width: 80%;
+    max-width: 600px;
+    background-color: #ffffff;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    text-align: center; /* Center-align text in the chart */
+}
+
+/* Text color */
+.chart * {
+    color: #333333; /* Dark text color for readability */
+}
+
+/* Optional styling for images on the chart (if any) */
+.chart-item img {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+}
+
+
+.chart-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f0f0f0;
+    margin-top: 0px; /* Adjust value as needed */
+}

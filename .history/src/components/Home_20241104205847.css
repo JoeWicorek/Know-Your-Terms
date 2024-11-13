@@ -1,0 +1,21 @@
+.home-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f0f0f0;
+    padding: 100px; /* Optional padding */
+}
+
+.company-name {
+    margin-top: 20px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.chart-wrapper {
+    width: 100%;
+    max-width: 200px; /* Adjust max width as necessary */
+    margin: 0 auto;   /* Center the chart */
+}

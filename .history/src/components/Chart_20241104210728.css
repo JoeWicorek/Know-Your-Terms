@@ -1,0 +1,12 @@
+.chart-wrapper {
+    width: 100%;           /* Full width of the container */
+    max-width: 800px;     /* Optional max-width for larger screens */
+    margin: 0 auto;       /* Center the chart wrapper */
+    display: flex;        /* Flex to control alignment */
+    justify-content: flex-end; /* Align to the right */
+}
+
+.chart {
+    width: 100%;          /* Make the chart fill the wrapper */
+    height: 500px;       /* Set a fixed height for the chart (adjust as needed) */
+}

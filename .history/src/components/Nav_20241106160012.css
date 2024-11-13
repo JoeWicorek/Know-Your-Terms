@@ -1,0 +1,42 @@
+/* Navbar Styling */
+nav {
+    background-color: #ffffff;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1);
+}
+
+.company-name {
+    font-weight: bold;
+    color: #4CAF50; /* Greenish color as per the logo on the left */
+    font-size: 1.2rem;
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 1.5rem;
+}
+
+nav ul li {
+    color: #333333;
+    font-weight: bold;
+}
+
+nav ul li a {
+    color: #333333;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    transition: background-color 0.3s ease;
+}
+
+nav ul li a:hover {
+    background-color: #f0f0f0;
+    border-radius: 5px;
+}

@@ -1,0 +1,31 @@
+/* Home.css */
+
+.home-container {
+    display: flex;
+    flex-direction: column; /* Stack content vertically */
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f0f0f0;
+}
+
+.company-name {
+    margin-top: 20px; /* Adjust spacing from top if needed */
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Home.css */
+.chart-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    width: 80%;          /* Limit the width of the chart */
+    max-width: 600px;     /* Prevent it from expanding too wide */
+}
+
+/* Chart.css */
+.chart {
+    width: 100%;  /* Makes the chart fill the container */
+}
