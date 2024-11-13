@@ -1,0 +1,15 @@
+.chart {
+    width: 100%;      /* Fill the wrapper */
+    height: 500px;    /* Fixed height */
+    position: relative; /* Ensure positioning is managed correctly */
+}
+
+/* Add styles for the chart wrapper to ensure it stretches properly */
+.chart-wrapper {
+    width: 100%;      /* Full width of the container */
+    max-width: 1000px; /* Optional max-width for larger screens */
+    m
+    margin: 0 auto;   /* Center the chart wrapper */
+    display: flex;    /* Flex to control alignment */
+    justify-content: flex-end; /* Align to the right */
+}

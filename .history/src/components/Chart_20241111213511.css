@@ -1,0 +1,52 @@
+.center-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.chart-container {
+    position: relative;
+    width: 90%; /* Increase width for larger appearance */
+    max-width: 1200px; /* Increase max-width for a bigger container */
+    height: 600px; /* Increase height for more space */
+    padding: 30px; /* Adjust padding if needed */
+    border: 1px solid #2D79BE;
+    border-radius: 20px;
+    background-color: #F9F9F9;
+}
+
+.grade-scale {
+    height: 100px; /* Increase height for a bigger grade scale */
+    background: linear-gradient(to right, #4CAF50, #CDDC39, #FFEB3B, #FFC107, #FF5722);
+    border-radius: 20px;
+    margin-top: 50px;
+    width: 100%;
+    display: flex;
+    overflow: hidden;
+}
+
+.grade-label.on-scale {
+    font-size: 1.2rem; /* Increase font size for better visibility */
+    font-weight: bold;
+    color: #333;
+}
+
+.platform-icon {
+    width: 60px; /* Increase icon size */
+    height: 60px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.bottom-icon {
+    width: 70px; /* Increase bottom icon size */
+    height: 70px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.description {
+    font-size: 1.4rem; /* Increase font size for description */
+    line-height: 1.7;
+}

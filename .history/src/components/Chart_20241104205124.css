@@ -1,0 +1,6 @@
+/* Chart.css */
+.chart {
+    width: 400%;  /* Make the chart fill its container */
+    height: 4000px; /* Set a fixed height for the chart (adjust as needed) */
+    position: relative; /* Ensure positioning is managed correctly */
+}

@@ -1,77 +1,69 @@
-import React, { useEffect } from 'react';
-import * as d3 from 'd3';
+import React, { useState } from 'react';
+import './Chart.css';
 
-const SocialMediaInfoChart = () => {
-    const data = [
-        { platform: "Facebook", infoCount: 10, infoCollected: ["Location", "Interests", "Posts", "Friends", "Messages"] },
-        { platform: "Google", infoCount: 9, infoCollected: ["Search History", "Location", "Interests"] },
-        { platform: "Twitter", infoCount: 7, infoCollected: ["Tweets", "Location", "Engagement Metrics"] },
-        { platform: "Instagram", infoCount: 8, infoCollected: ["Photos", "Videos", "Interactions"] },
-        { platform: "TikTok", infoCount: 6, infoCollected: ["Videos", "Location", "Device Info"] }
-    ];
+const platformData = [
+    { platform: "Facebook", imageUrl: "/img/facebook.png", grade: "A+", description: "Facebook's privacy policy has improved significantly over recent years." },
+    { platform: "Google", imageUrl: "/img/google.png", grade: "B-", description: "Google has a moderate privacy score due to data collection practices." },
+    { platform: "Twitter", imageUrl: "/img/twitter.png", grade: "C+", description: "Twitter has been criticized for its handling of user data." },
+    { platform: "Instagram", imageUrl: "/img/instagram.png", grade: "D-", description: "Instagram's privacy policy has raised concerns about data sharing." },
+    { platform: "TikTok", imageUrl: "/img/tiktok.png", grade: "E+", description: "TikTok's data collection practices are considered invasive by some experts." }
+];
 
-    useEffect(() => {
-        const width = 600;
-        const height = 400;
-        const margin = { top: 20, right: 30, bottom: 40, left: 40 };
-
-        const svg = d3.select("#chart")
-            .attr("width", width)
-            .attr("height", height);
-
-        // Create x and y scales
-        const xScale = d3.scaleBand()
-            .domain(data.map(d => d.platform))
-            .range([margin.left, width - margin.right])
-            .padding(0.1);
-
-        const yScale = d3.scaleLinear()
-            .domain([0, d3.max(data, d => d.infoCount) + 1])
-            .range([height - margin.bottom, margin.top]);
-
-        // Add axes
-        svg.append("g")
-            .attr("transform", `translate(0,${height - margin.bottom})`)
-            .call(d3.axisBottom(xScale));
-
-        svg.append("g")
-            .attr("transform", `translate(${margin.left},0)`)
-            .call(d3.axisLeft(yScale));
-
-        // Create tooltips
-        const tooltip = d3.select("body").append("div")
-            .style("position", "absolute")
-            .style("background", "white")
-            .style("border", "1px solid black")
-            .style("padding", "5px")
-            .style("display", "none");
-
-        // Draw bars
-        svg.selectAll(".bar")
-            .data(data)
-            .enter()
-            .append("rect")
-            .attr("class", "bar")
-            .attr("x", d => xScale(d.platform))
-            .attr("y", d => yScale(d.infoCount))
-            .attr("width", xScale.bandwidth())
-            .attr("height", d => height - margin.bottom - yScale(d.infoCount))
-            .attr("fill", "#69b3a2")
-            .on("mouseover", (event, d) => {
-                tooltip.style("display", "block")
-                    .html(`<strong>${d.platform}</strong><br>Info Count: ${d.infoCount}<br>Info Collected:<br>${d.infoCollected.join(", ")}`)
-                    .style("left", (event.pageX + 5) + "px")
-                    .style("top", (event.pageY - 28) + "px");
-            })
-            .on("mousemove", (event) => {
-                tooltip.style("left", (event.pageX + 5) + "px")
-                    .style("top", (event.pageY - 28) + "px");
-            })
-            .on("mouseout", () => tooltip.style("display", "none"));
-
-    }, []);
-
-    return <svg id="chart"></svg>;
+const gradePositions = {
+    "A+": "5%",
+    "B-": "20%",
+    "C+": "40%",
+    "D-": "60%",
+    "E+": "80%",
+    "F-": "95%"
 };
 
-export default SocialMediaInfoChart;
+const SocialMediaGradeChart = () => {
+    const [hoveredPlatform, setHoveredPlatform] = useState(null);
+
+    return (
+        <div className="center-wrapper">
+            <div className="chart-container">
+                <div className="grade-scale">
+                    {Object.keys(gradePositions).map((grade) => (
+                        <span key={grade} className="grade-label on-scale" style={{ left: gradePositions[grade] }}>{grade}</span>
+                    ))}
+                    {platformData.map((platform) => (
+                        <img
+                            key={platform.platform}
+                            src={platform.imageUrl}
+                            alt={platform.platform}
+                            className="platform-icon"
+                            style={{ left: gradePositions[platform.grade] }}
+                            onMouseEnter={() => setHoveredPlatform(platform)}
+                            onMouseLeave={() => setHoveredPlatform(null)}
+                        />
+                    ))}
+                </div>
+                {hoveredPlatform && (
+                    <div className="custom-tooltip" style={{ left: gradePositions[hoveredPlatform.grade] }}>
+                        <div className="tooltip-arrow"></div>
+                        <div className="tooltip-content">
+                            {hoveredPlatform.description}
+                        </div>
+                    </div>
+                )}
+                <div className="platform-icons">
+                    {platformData.map((platform, index) => (
+                        <img
+                            key={index}
+                            src={platform.imageUrl}
+                            alt={platform.platform}
+                            className="bottom-icon"
+                            onMouseEnter={() => setHoveredPlatform(platform)}
+                            onMouseLeave={() => setHoveredPlatform(null)}
+                        />
+                    ))}
+                </div>
+                <div className="description"></div>
+            </div>
+        </div>
+    );
+};
+
+export default SocialMediaGradeChart;

@@ -1,0 +1,23 @@
+.home-container {
+    display: flex;
+    flex-direction: column; /* Stack content vertically */
+    align-items: center;    /* Center items horizontally */
+    min-height: 100vh;      /* Full viewport height */
+    background-color: #f0f0f0;
+    padding: 20px;          /* Optional padding */
+}
+
+.company-name {
+    margin-top: 20px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.chart-wrapper {
+    display: flex;          /* Enable flexbox */
+    justify-content: flex-end; /* Align content to the right */
+    width: 100%;           /* Full width */
+    max-width: 800px;      /* Optional max width */
+    margin: 0;             /* Reset margin */
+}

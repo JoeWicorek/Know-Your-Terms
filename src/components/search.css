@@ -1,0 +1,31 @@
+.search-container {
+    display: flex;
+    align-items: center;
+    border: 1px solid #3f72af;
+    border-radius: 25px;
+    padding: 5px 15px;
+    width: 800px;
+}
+
+.styled-search-input {
+    border: none;
+    outline: none;
+    padding: 8px;
+    width: 100%;
+    color: #3f72af;
+    font-size: 16px;
+}
+
+.search-icon {
+    color: #3f72af;
+    margin: 0 5px;
+    font-size: 18px;
+}
+
+.search-container .search-icon:first-child {
+    margin-right: 10px;
+}
+
+.search-container .search-icon:last-child {
+    margin-left: 10px;
+}

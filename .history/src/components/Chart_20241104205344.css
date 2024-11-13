@@ -1,0 +1,19 @@
+/* Home.css */
+.chart-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;              /* Allow it to take up available space */
+    width: 80%;          /* Limit the width of the chart wrapper */
+    max-width: 600px;    /* Prevent it from expanding too wide */
+    margin-top: 20px;    /* Space between company name and chart */
+    height: auto;        /* Allow height to adjust based on content */
+}
+
+/* Home.css */
+.chart {
+    width: 100%;  /* Make the chart fill its container */
+    height: 400px; /* Set a fixed height for the chart (adjust as needed) */
+    position: relative; /* Ensure positioning is managed correctly */
+}
+

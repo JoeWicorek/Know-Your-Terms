@@ -1,0 +1,15 @@
+/* Home.css */
+.home-container {
+    display: flex;
+    flex-direction: column; /* Stack content vertically */
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f0f0f0;
+}
+
+.company-name {
+    margin-top: 20px; /* Adjust spacing from top if needed */
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+}
