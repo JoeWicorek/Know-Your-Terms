@@ -6,6 +6,7 @@ import Home from './components/Home';
 import Articles from './components/Articles';
 import WhatNow from './components/WhatNow';
 import About from './components/About';
+import websiteData from './data/websiteData';
 
 function App() {
     return (
