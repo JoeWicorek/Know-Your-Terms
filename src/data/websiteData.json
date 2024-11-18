@@ -1,6 +1,0 @@
-[
-    { "name": "Google", "icon": "/google-icon.png", "rating": "A+", "description": "Search engine giant." },
-    { "name": "Facebook", "icon": "/facebook-icon.png", "rating": "B", "description": "Social media platform." },
-    { "name": "Twitter", "icon": "/twitter-icon.png", "rating": "C-", "description": "Microblogging site." }
-  ]
-  
