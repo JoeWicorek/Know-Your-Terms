@@ -24,7 +24,6 @@ const gradientBarPlugin = {
     console.log("Chart Area:", chartArea);
 console.log("Scales:", scales);
 
-
     // Create gradient
     const gradient = ctx.createLinearGradient(chartArea.left, 0, chartArea.right, 0);
     gradient.addColorStop(0, "green");
@@ -44,7 +43,6 @@ console.log("Scales:", scales);
   },
 };
 
-
 Chart.register(gradientBarPlugin);
 
 const grades = ["A+", "B-", "C+", "D-", "E+", "F-"];
@@ -54,7 +52,7 @@ const gradePositions = grades.reduce((acc, grade, index) => {
 }, {});
 
 // Preprocess images to ensure consistent size
-const preprocessImage = (img, targetSize = 128) => {
+const preprocessImage = (img, targetSize = 128, highlight = false) => {
   const canvas = document.createElement("canvas");
   canvas.width = targetSize;
   canvas.height = targetSize;
@@ -62,6 +60,14 @@ const preprocessImage = (img, targetSize = 128) => {
 
   // Clear the canvas
   ctx.clearRect(0, 0, targetSize, targetSize);
+
+    // Add a highlight effect if needed
+    if (highlight) {
+      ctx.shadowBlur = 10;
+      ctx.shadowColor = "#007bff"; // Highlight color
+      ctx.fillStyle = "#ffffff"; // Background for border effect
+      ctx.fillRect(0, 0, targetSize, targetSize);
+    }
 
   // Calculate scaling while maintaining aspect ratio
   const scale = Math.min(targetSize / img.width, targetSize / img.height);
@@ -76,7 +82,7 @@ const preprocessImage = (img, targetSize = 128) => {
   return canvas;
 };
 
-const WebsiteRatingGraph = ({ data }) => {
+const WebsiteRatingGraph = ({ data,selectedWebsite }) => {
   const [imageElements, setImageElements] = useState({});
   const minSize = 10; // Minimum icon size
   const maxSize = 30; // Maximum icon size
@@ -131,8 +137,14 @@ const WebsiteRatingGraph = ({ data }) => {
           y: calculateYValue(index),
         },
       ],
-      pointStyle: imageElements[website.name] || "circle", // Use favicon or fallback to circle
-      pointRadius: calculatePointRadius(), // Dynamic size
+      pointStyle: 
+      selectedWebsite?.name === website.name
+      ? preprocessImage(imageElements[website.name], 150, true) // Highlighted logo
+      : imageElements[website.name] || "circle", // Default logo or fallback
+      pointRadius: calculatePointRadius(website), // Dynamic size
+      backgroundColor: selectedWebsite?.name === website.name ? "#007bff" : "#cccccc", // Highlight color
+      borderColor: selectedWebsite?.name === website.name ? "#0056b3" : "#888888", // Border color
+      borderWidth: selectedWebsite?.name === website.name ? 3 : 1, // Thicker border for selected
     })),
   };
 
