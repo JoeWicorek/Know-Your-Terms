@@ -12,26 +12,40 @@ import {
 // Register Chart.js components
 Chart.register(ScatterController, PointElement, LinearScale, Tooltip, Legend);
 
-// Custom PointElement for rendering icons
-class CustomPoint extends PointElement {
-  draw(ctx) {
-    const { x, y, options } = this;
-    const { pointStyle, radius } = options;
+// Custom plugin for gradient bar
+const gradientBarPlugin = {
+  id: "gradientBar",
+  afterDraw(chart) {
+    const { ctx, chartArea, scales } = chart;
 
-    if (pointStyle instanceof HTMLCanvasElement) {
-      const size = radius * 2; // Diameter of the icon
-      ctx.save();
-      ctx.drawImage(pointStyle, x - radius, y - radius, size, size);
-      ctx.restore();
-    } else {
-      // Fallback for default circle rendering
-      super.draw(ctx);
-    }
-  }
-}
+    // Ensure the chart is rendered
+    if (!chartArea || !scales.x) return;
+    console.log("Gradient plugin triggered!");
+    console.log("Chart Area:", chartArea);
+console.log("Scales:", scales);
 
-// Register the custom point element
-Chart.register(CustomPoint);
+
+    // Create gradient
+    const gradient = ctx.createLinearGradient(chartArea.left, 0, chartArea.right, 0);
+    gradient.addColorStop(0, "green");
+    gradient.addColorStop(0.5, "yellow");
+    gradient.addColorStop(1, "red");
+
+    ctx.save();
+    ctx.fillStyle = gradient;
+
+    // Draw the gradient bar
+    const gradientHeight = 20; // Height of the gradient bar
+    const yPos = scales.x.bottom - 7; // Position just below the x-axis
+    ctx.fillRect(chartArea.left, yPos, chartArea.width, gradientHeight);
+    console.log(`Drawing gradient at Y: ${yPos}, Height: ${gradientHeight}`);
+
+    ctx.restore();
+  },
+};
+
+
+Chart.register(gradientBarPlugin);
 
 const grades = ["A+", "B-", "C+", "D-", "E+", "F-"];
 const gradePositions = grades.reduce((acc, grade, index) => {
@@ -123,41 +137,21 @@ const WebsiteRatingGraph = ({ data }) => {
   };
 
   const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
     plugins: {
+      gradientBar: true, // Explicitly enable the gradient bar plugin
       legend: { display: false },
       tooltip: {
         enabled: true,
         callbacks: {
           label: function (tooltipItem) {
-            const datasetIndex = tooltipItem.datasetIndex; // Index of the dataset
-            const dataIndex = tooltipItem.dataIndex; // Index of the point in the dataset
-            const website = data[datasetIndex]; // Access website data directly
+            const datasetIndex = tooltipItem.datasetIndex;
+            const dataIndex = tooltipItem.dataIndex;
+            const website = data[datasetIndex];
             return `${website.name}: ${website.rating}`;
           },
         },
-      },
-      afterDraw: (chart) => {
-        const { ctx, chartArea, scales } = chart;
-
-        // Exit if chartArea is undefined (chart not rendered yet)
-        if (!chartArea) {
-          return;
-        }
-
-        const gradient = ctx.createLinearGradient(chartArea.left, 0, chartArea.right, 0);
-        gradient.addColorStop(0, "green");
-        gradient.addColorStop(0.5, "yellow");
-        gradient.addColorStop(1, "red");
-
-        ctx.save();
-        ctx.fillStyle = gradient;
-
-        // Draw the gradient bar just above the x-axis labels
-        const gradientHeight = 10; // Height of the gradient
-        const yPos = scales.x.bottom + 5; // Position just below the x-axis
-        ctx.fillRect(chartArea.left, yPos, chartArea.width, gradientHeight);
-
-        ctx.restore();
       },
     },
     scales: {
@@ -165,23 +159,31 @@ const WebsiteRatingGraph = ({ data }) => {
         min: 0.5,
         max: grades.length + 0.5,
         ticks: {
-          callback: (value) => grades[value - 1], // Show grade labels
+          callback: (value) => grades[value - 1],
+          font: {
+            size: 18,
+            weight: "bold",
+          },
+          color: "black",
         },
-        grid: { drawOnChartArea: false }, // Hide gridlines
+        grid: { drawOnChartArea: false },
       },
       y: {
         min: -9,
         max: 9,
         grid: {
-          drawBorder: true, // Show y-axis border
-          color: (context) => (context.tick.value === 0 ? "black" : "transparent"), // Highlight x-axis
+          display: false,
+          drawBorder: false,
+          color: (context) =>
+            context.tick.value === 0 ? "black" : "transparent",
         },
-        ticks: { display: false }, // Hide y-axis ticks
+        ticks: { display: false },
       },
     },
     responsive: true,
-    maintainAspectRatio: false, // Allow resizing
+    maintainAspectRatio: false,
   };
+  
 
   return (
     <div style={{ width: "100%", height: "500px", margin: "0 auto" }}>
