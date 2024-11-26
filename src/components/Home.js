@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import './Home.css';
 import WebsiteRatingGraph from "./WebsiteRatingGraph"; // Graph component
 import websiteData from "../data/websiteData"; // Website data file
 
@@ -18,43 +19,30 @@ const Home = () => {
   };
 
   return (
-    <div>
-      <h1></h1>
-
+    <div className="home-container">
+       
       {/* Search Box */}
       <input
         type="text"
+        className="search-box"
         placeholder="Search for a website..."
         value={searchQuery}
         onChange={handleSearch}
-        style={{
-          margin: "20px auto",
-          display: "block",
-          width: "80%",
-          padding: "10px",
-          fontSize: "16px",
-        }}
       />
-
+      
       {/* Graph */}
+      <div className="chart-wrapper">
+      <div className="chart-container">
       <WebsiteRatingGraph
         data={websiteData}
         selectedWebsite={selectedWebsite}
       />
-
+      </div>
+      </div>
+      
       {/* Info Card */}
       {selectedWebsite && (
-        <div
-          style={{
-            border: "1px solid #ddd",
-            borderRadius: "5px",
-            padding: "10px",
-            margin: "20px auto",
-            width: "80%",
-            textAlign: "center",
-            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-          }}
-        >
+        <div className="info-card">
           <h2>{selectedWebsite.name}</h2>
           <img
             src={selectedWebsite.icon}
@@ -65,8 +53,7 @@ const Home = () => {
           <p>{selectedWebsite.description}</p>
         </div>
       )}
-    </div>
-  );
-};
-
+     </div>
+    )
+  };
 export default Home;
