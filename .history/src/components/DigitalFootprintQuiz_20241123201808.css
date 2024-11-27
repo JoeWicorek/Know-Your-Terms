@@ -1,0 +1,87 @@
+/* DigitalFootprintQuiz.css */
+
+.quiz-container {
+    width: 40%;
+  
+    padding: 60px;
+    background-color: #79B4D1;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+    margin: 100px;
+    align-items: center;
+
+}
+
+.quiz-title {
+    text-align: center;
+    color: #333;
+    font-size: 1.8em;
+    margin-bottom: 10px;
+}
+
+.quiz-description {
+    text-align: center;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.quiz-options {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.quiz-option {
+    width: 45%;
+    margin-bottom: 15px;
+}
+
+.quiz-label {
+    font-size: 1.1em;
+    color: #444;
+}
+
+.quiz-checkbox {
+    margin-right: 10px;
+    transform: scale(1.2);
+    cursor: pointer;
+}
+
+.quiz-button {
+    display: block;
+    width: 50%;
+    margin: 20px auto;
+    padding: 12px;
+    font-size: 1.2em;
+    color: rgb(247, 239, 239);
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.quiz-button:hover {
+    background-color: #0056b3;
+}
+
+.quiz-result {
+    text-align: center;
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #eef9f1;
+    border-radius: 8px;
+    border: 1px solid #e1e1e1;
+}
+
+.score {
+    font-size: 1.5em;
+    color: #007bff;
+}
+
+.exposure-level {
+    font-weight: bold;
+    color: #ff4500;
+}

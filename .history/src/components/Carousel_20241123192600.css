@@ -1,0 +1,56 @@
+/* Carousel.css */
+
+.card {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    background-color: #ffffff;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.article-content h3 {
+    font-size: 1.5em;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.article-content p {
+    font-size: 1em;
+    line-height: 1.5;
+    color: #555;
+}
+
+.article-content button {
+    margin-top: 15px;
+    padding: 10px 15px;
+    border: none;
+    background-color: yellow;
+    color: #000;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.article-content button:hover {
+    background-color: #ffcc00;
+}
+
+.slick-slide {
+    padding: 15px;
+}
+
+.slick-center {
+    transform: scale(1.05);
+}
+
+.custom-arrow {
+    z-index: 2;
+    font-size: 2rem;
+    color: #333;
+}
