@@ -1,0 +1,46 @@
+/* Carousel.css */
+.card {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s;
+}
+
+.card img {
+    width: 100%;
+    height: auto;
+}
+
+.card .content {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    color: #fff;
+}
+
+.card button {
+    margin-top: 10px;
+    padding: 10px 15px;
+    border: none;
+    background-color: yellow;
+    color: #000;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.slick-slide {
+    transition: transform 0.5s;
+    opacity: 0.6;
+}
+
+.slick-center {
+    transform: scale(1.1);
+    opacity: 1;
+}
+
+.custom-arrow {
+    z-index: 1;
+    font-size: 2rem;
+    color: #fff;
+}
