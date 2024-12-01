@@ -150,19 +150,6 @@ li {
 }
 
 
-.quiz-button {
-    margin-top: 20px;
-}
-.quiz-result {
-    margin-top: 10px;
-    margin-bottom: 20px; /* Add spacing from the button */
-    text-align: center;
-    background: #eaf4ff;
-    padding: 15px;
-    border-radius: 8px;
-    border: 1px solid #b3daff;
-    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.05);
-}
 
 
 .percentage {

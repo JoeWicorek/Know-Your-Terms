@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './DigitalFootprintQuiz.css';
+import './TermsOfServiceQuiz.css';
 
 function TermsOfServiceQuiz() {
     const [answers, setAnswers] = useState({});

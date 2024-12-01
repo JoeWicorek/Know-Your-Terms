@@ -50,7 +50,7 @@ function WhatNow() {
                 </div>
                 <div className="card">
                     <iframe
-                        src="https://getterms.io/blog/who-owns-the-personal-data-you-collect-from-users" // Replace with the actual URL of the article you want to display
+                        src="https://techreviewer.co/blog/app-terms-and-conditions-6-key-clauses-to-include-in-yours" // Replace with the actual URL of the article you want to display
                         title="How AI is Changing Industries"
                         style={{
                             width: '60%',
@@ -64,7 +64,7 @@ function WhatNow() {
                 </div>
                 <div className="card">
                     <iframe
-                        src="https://blog.credo.com/2023/11/02/how-to-prevent-apps-from-accessing-your-personal-data/" // Replace with the actual URL of the article you want to display
+                        src="https://example.com/adventure-article" // Replace with the actual URL of the article you want to display
                         title="Adventure in the Modern Age"
                         style={{
                             width: '60%',
@@ -78,7 +78,7 @@ function WhatNow() {
                 </div>
                 <div className="card">
                     <iframe
-                        src="https://www.pcmag.com/picks/stop-trackers-dead-the-best-private-browsers"
+                        src="https://www.aura.com/learn/how-to-delete-your-digital-footprint"
                         title="How to Delete Your Digital Footprint - Aura"
                         style={{
                             width: '60%',
@@ -92,7 +92,7 @@ function WhatNow() {
                 </div>
                 <div className="card">
                     <iframe
-                        src="https://cookie-script.com/knowledge-base/disabale-cookies-iphone"
+                        src="https://www.healthdata.org/data-tools-practices/interactive-data-visuals"
                         title="Tips to Clean Up Your Digital Footprint - Keeper Security"
                         style={{
                             width: '60%',

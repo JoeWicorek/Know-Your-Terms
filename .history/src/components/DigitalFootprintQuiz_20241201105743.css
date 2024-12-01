@@ -1,6 +1,6 @@
 /* General container styles */
 .quiz-container {
-    height: 800px;
+    height: ;
     font-family: 'Arial', sans-serif;
     max-width: 600px;
     margin: 50px auto; /* Centers the container */
@@ -147,32 +147,4 @@ li {
         font-size: 14px;
         padding: 10px 15px;
     }
-}
-
-
-.quiz-button {
-    margin-top: 20px;
-}
-.quiz-result {
-    margin-top: 10px;
-    margin-bottom: 20px; /* Add spacing from the button */
-    text-align: center;
-    background: #eaf4ff;
-    padding: 15px;
-    border-radius: 8px;
-    border: 1px solid #b3daff;
-    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.05);
-}
-
-
-.percentage {
-    color: #007bff;
-    font-weight: bold;
-    font-size: 20px;
-}
-
-.grade {
-    color: #28a745;
-    font-weight: bold;
-    font-size: 18px;
 }

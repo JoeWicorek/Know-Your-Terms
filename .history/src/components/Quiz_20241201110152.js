@@ -3,7 +3,7 @@ import './DigitalFootprintQuiz.css';
 
 function TermsOfServiceQuiz() {
     const [answers, setAnswers] = useState({});
-    const [percentage, setPercentage] = useState(null);
+    const [score, setScore] = useState(null);
 
     // Platform data categorized
     const platforms = {
@@ -67,11 +67,8 @@ function TermsOfServiceQuiz() {
         setAnswers({ ...answers, [name]: checked });
     };
 
-    const calculatePercentage = () => {
-        const maxScore = 25; // 5 criteria, each with max score of 5
-        const minScore = 5; // 5 criteria, each with min score of 1
-
-        let totalPercentage = 0;
+    const calculateScore = () => {
+        let totalScore = 0;
         let selectedPlatforms = 0;
 
         Object.keys(answers).forEach((platform) => {
@@ -80,22 +77,20 @@ function TermsOfServiceQuiz() {
                 const { clarity, transparency, fairness, accessibility, accountability } = Object.values(platforms)
                     .flatMap((category) => Object.entries(category))
                     .find(([key]) => key === platform)[1];
-
-                const actualScore = clarity + transparency + fairness + accessibility + accountability;
-                const platformPercentage = ((maxScore - actualScore) / (maxScore - minScore)) * 100;
-                totalPercentage += platformPercentage;
+                totalScore += clarity + transparency + fairness + accessibility + accountability;
             }
         });
 
-        setPercentage(selectedPlatforms ? totalPercentage / selectedPlatforms : 0);
+        const averageScore = selectedPlatforms ? totalScore / (selectedPlatforms * 5) : 0;
+        setScore(averageScore);
     };
 
     const getGrade = () => {
-        if (percentage === null) return '';
-        if (percentage >= 90) return 'A';
-        if (percentage >= 80) return 'B';
-        if (percentage >= 70) return 'C';
-        if (percentage >= 60) return 'D';
+        if (score === null) return '';
+        if (score <= 2) return 'A';
+        if (score <= 2.5) return 'B';
+        if (score <= 3.5) return 'C';
+        if (score <= 4.5) return 'D';
         return 'F';
     };
 
@@ -127,14 +122,25 @@ function TermsOfServiceQuiz() {
                 </div>
             ))}
 
-            <button onClick={calculatePercentage} className="quiz-button">
-                Get Your Evaluation Percentage
+            <button onClick={calculateScore} className="quiz-button">
+                Get Your Evaluation Score
             </button>
 
-            {percentage !== null && (
+            {score !== null && (
                 <div className="quiz-result">
-                    <h3>Your Average Percentage: <span className="percentage">{percentage.toFixed(2)}%</span></h3>
+                    <h3>Your Average Score: <span className="score">{score.toFixed(2)}</span></h3>
                     <p>Your overall grade: <strong className="grade">{getGrade()}</strong></p>
+                    <h4>Breakdown by Selected Platforms:</h4>
+                    <ul>
+                        {Object.keys(answers).map(
+                            (platform) =>
+                                answers[platform] && (
+                                    <li key={platform}>
+                                        {platform}: Average Score - {Object.values(Object.values(platforms).find((category) => platform in category)[platform]).reduce((a, b) => a + b) / 5}
+                                    </li>
+                                )
+                        )}
+                    </ul>
                 </div>
             )}
         </div>
