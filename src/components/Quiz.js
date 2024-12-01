@@ -99,7 +99,8 @@ function TermsOfServiceQuiz() {
         return 'F';
     };
 
-    return (
+    return ( 
+     <div class="flex">
         <div className="quiz-container">
             <h2 className="quiz-title">Terms of Service: Platform Evaluation</h2>
             <p className="quiz-description">Select the platforms you want to evaluate based on their terms of service.</p>
@@ -137,6 +138,7 @@ function TermsOfServiceQuiz() {
                     <p>Your overall grade: <strong className="grade">{getGrade()}</strong></p>
                 </div>
             )}
+        </div>
         </div>
     );
 }
