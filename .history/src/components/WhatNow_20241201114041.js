@@ -92,7 +92,7 @@ function WhatNow() {
                 </div>
                 <div className="card">
                     <iframe
-                        src="https://cookie-script.com/knowledge-base/disabale-cookies-iphone"
+                        src="https://support.mozilla.org/en-US/kb/clear-cookies-and-site-data-firefox"
                         title="Tips to Clean Up Your Digital Footprint - Keeper Security"
                         style={{
                             width: '60%',

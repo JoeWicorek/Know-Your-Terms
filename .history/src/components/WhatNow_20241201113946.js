@@ -92,7 +92,7 @@ function WhatNow() {
                 </div>
                 <div className="card">
                     <iframe
-                        src="https://cookie-script.com/knowledge-base/disabale-cookies-iphone"
+                        src="https://www.theverge.com/24080400/android-app-permissions-manage-how-to"
                         title="Tips to Clean Up Your Digital Footprint - Keeper Security"
                         style={{
                             width: '60%',
