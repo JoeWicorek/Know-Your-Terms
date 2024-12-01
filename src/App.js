@@ -11,7 +11,6 @@ import About from './components/About';
 function App() {
     return (
         <Router>
-            <div>
                 <Nav /> {/* Render Nav here */}
                 <Routes>
                     <Route path="/" element={<Home />} />
@@ -19,7 +18,6 @@ function App() {
                     <Route path="/quiz" element={<Quiz/>} />
                     <Route path="/whatnow" element={<WhatNow />} />
                 </Routes>
-            </div>
         </Router>
     );
 }
