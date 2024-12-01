@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* General container styles */
 .quiz-container {
     height: 800px;
@@ -13,6 +14,23 @@
 }
 
 /* Title styling */
+=======
+/* DigitalFootprintQuiz.css */
+
+/* Parent container for centering the quiz */
+.body-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full height to make sure it's vertically centered */
+    width: 100vw;  /* Full width */
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+/* DigitalFootprintQuiz.css */
+
+>>>>>>> f24cd8d5044c67a1bfa50526e4cf866afd02a2f1
 .quiz-title {
     font-size: 26px;
     font-weight: bold;
@@ -176,3 +194,19 @@ li {
     font-weight: bold;
     font-size: 18px;
 }
+/* The quiz container itself */
+.quiz-container {
+    width: 60%;
+    padding: 70px; 
+    background-color: #79B4D1;
+    border-radius: 10px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+}
+.flex {
+    justify-content: center;
+    align-items: center;
+    display: flex; 
+    width: 100%;
+}
+
