@@ -1,86 +1,239 @@
 import os
-import requests
+import re
+import openai
+from langdetect import detect, DetectorFactory
 
-# GitLab API configuration
-GITLAB_API_BASE = "https://code.europa.eu/api/v4"
-PROJECT_PATH = "p2b/contrib-versions"  # Replace with your project path
-BRANCH = "main"  # Replace with your branch name
-TOKEN = "your_gitlab_token"  # Add your GitLab personal access token here (if required)
+# Set seed for consistent language detection
+DetectorFactory.seed = 0
 
-HEADERS = {
-    "Private-Token": TOKEN,  # Include token for private repositories
-}
+# Set up OpenAI API Key
+openai.api_key = "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"
 
-# Directory to save files locally
-DOWNLOAD_DIR = "./gitlab_repo"
+# Function to check if the folder name matches the criteria
+def is_valid_folder(folder_name):
+    return ".com" in folder_name or "." not in folder_name
+
+# Function to check if the text is in English
+def is_english(text):
+    try:
+        detected_lang = detect(text)
+        return detected_lang == "en"
+    except Exception as e:
+        print(f"Language detection failed: {e}")
+        return False
+
+# Function to split text into sentences
+def split_into_sentences(text):
+    return re.split(r'(?<=[.!?]) +', text)
+
+# Function to evaluate a category and extract top 3 reasons
+def evaluate_all_categories(text):
+    try:
+        response = openai.ChatCompletion.create(
+        model= "gpt-4o",
+        messages=[
+            {"role": "system", "content": "You are a legal assistant trained to analyze terms of service documents."},
+            {"role": "user", "content": "Evaluate the following terms of service text based on these categories: "
+                                    "Clarity and Simplicity, Data Privacy and Security, Control Over Data and Account, "
+                                    "Fairness of Policies, Transparency on Changes. "
+                                    "Assign a a grade (A+ to F) for each category and exmplain the top 3 reasons for the grade. "
+                                    "Each reason should clearly describe what aspect of the text influenced the grade.\n\n"
+                                    f"Text:\n{text}\n\n"
+                                    "Provide the output in the format: Grade: [GRADE]. Reasons: [1. Reason 1, 2. Reason 2, 3. Reason 3]."}
+        ],
+        max_tokens=3000,
+        temperature=0.7,
+        n=1
+        )
+       
+        content = response["choices"][0]["message"]["content"].strip()
+        # Use the parse_response function
+        category_grades, category_reasons = parse_response(content)
+
+        # Debugging logs
+        print("Raw GPT Response:", content)
+        print(category_grades)
+        print(category_reasons)
+        return category_grades, category_reasons
+    except Exception as e:
+        print(f"Error during evaluation for category '{category}': {e}")
+        return "F", ["Error in generating reasons."]
+
+def parse_response(response_text):
+    category_grades = {}
+    category_reasons = {}
+    current_category = None
+
+    lines = response_text.strip().split("\n")
+
+    for line in lines:
+        line = line.strip()
+
+        # Detect categories (e.g., **Clarity and Simplicity**)
+        if line.startswith("**") and line.endswith("**") and "Grade" not in line:
+            current_category = line.strip("**").strip()
+            category_grades[current_category] = None  # Placeholder for grade
+            category_reasons[current_category] = []  # Placeholder for reasons
+
+        # Detect grades (e.g., Grade: C)
+        elif "Grade:" in line:
+            grade = line.split("Grade:")[-1].strip().split("**")[0].strip()
+            if current_category:
+                category_grades[current_category] = grade
+
+        # Detect reasons (e.g., numbered list 1., 2., 3.)
+        elif line.startswith(("1.", "2.", "3.")) and current_category:
+            reason_text = line.split(". ", 1)[-1].strip()  # Extract reason text after the number
+            category_reasons[current_category].append(reason_text)
+
+    # Debugging output
+    print("Parsed Grades:", category_grades)
+    print("Parsed Reasons:", category_reasons)
+
+    return category_grades, category_reasons
 
 
-def get_project_id(project_path):
-    """Get the project ID from the project path."""
-    url = f"{GITLAB_API_BASE}/projects"
-    response = requests.get(url, headers=HEADERS, params={"search": project_path})
-    response.raise_for_status()
-    projects = response.json()
-    for project in projects:
-        if project["path_with_namespace"] == project_path:
-            return project["id"]
-    raise ValueError("Project not found!")
+# Calculate overall grade
+def calculate_overall_grade(category_grades, weights):
+    total_score = 0.0
+    total_weight = 0.0
+    grade_to_numeric = {
+        "A+": 4.3, "A": 4.0, "A-": 3.7,
+        "B+": 3.3, "B": 3.0, "B-": 2.7,
+        "C+": 2.3, "C": 2.0, "C-": 1.7,
+        "D+": 1.3, "D": 1.0, "D-": 0.7,
+        "F": 0.0,
+    }
 
+    for category, grade in category_grades.items():
+        numeric_value = grade_to_numeric.get(grade, 0.0)
+        print(category,numeric_value)
+        weight = weights.get(category, 1)
+        total_score += numeric_value * weight
+        total_weight += weight
 
-def fetch_repository_tree(project_id, branch="main", path=""):
-    """Fetch the repository tree."""
-    url = f"{GITLAB_API_BASE}/projects/{project_id}/repository/tree"
-    response = requests.get(
-        url,
-        headers=HEADERS,
-        params={"ref": branch, "path": path, "recursive": True},
-    )
-    response.raise_for_status()
-    return response.json()
+    overall_score = round(total_score / total_weight,1)
+    print(overall_score)
 
+    numeric_to_grade = {
+        4.3: "A+", 4.0: "A", 3.7: "A-",
+        3.3: "B+", 3.0: "B", 2.7: "B-",
+        2.3: "C+", 2.0: "C", 1.7: "C-",
+        1.3: "D+", 1.0: "D", 0.7: "D-",
+        0.0: "F",
+    }
+    
+    # Determine the closest matching grade
+    grade_keys = sorted(numeric_to_grade.keys(), reverse=True)
+    for key in grade_keys:
+        if overall_score >= key:
+            return numeric_to_grade[key]
+    return "F"
 
-def download_file(file_url, local_path):
-    """Download a file from GitLab."""
-    response = requests.get(file_url, headers=HEADERS, stream=True)
-    response.raise_for_status()
-    with open(local_path, "wb") as file:
-        for chunk in response.iter_content(chunk_size=8192):
-            file.write(chunk)
-    print(f"Downloaded: {local_path}")
+# Main function for analyzing terms of service
+def analyze_terms_in_folders(parent_folder):
+    categories = [
+        "Clarity and Simplicity",
+        "Data Privacy and Security",
+        "Control Over Data and Account",
+        "Fairness of Policies",
+        "Transparency on Changes",
+    ]
 
+    weights = {
+        "Clarity and Simplicity": 0.2,
+        "Data Privacy and Security": 0.3,
+        "Control Over Data and Account": 0.2,
+        "Fairness of Policies": 0.2,
+        "Transparency on Changes": 0.1,
+    }
 
-def process_files(project_id, tree, base_dir):
-    """Process the files in the repository tree."""
-    for item in tree:
-        file_path = os.path.join(base_dir, item["path"])
-        if item["type"] == "tree":
-            # Create directory if it doesn't exist
-            if not os.path.exists(file_path):
-                os.makedirs(file_path)
-            print(f"Created directory: {file_path}")
-        elif item["type"] == "blob":
-            # Download file if it doesn't exist or has been updated
-            file_url = f"{GITLAB_API_BASE}/projects/{project_id}/repository/files/{item['path']}/raw?ref={BRANCH}"
-            if not os.path.exists(file_path) or os.path.getsize(file_path) != item["size"]:
-                download_file(file_url, file_path)
-            else:
-                print(f"File is up-to-date: {file_path}")
+    results = {}
+    success = True
 
+    try:
+        for folder_name in os.listdir(parent_folder):
+            folder_path = os.path.join(parent_folder, folder_name)
 
-def main():
-    """Main function to fetch and download files."""
-    if not os.path.exists(DOWNLOAD_DIR):
-        os.makedirs(DOWNLOAD_DIR)
+            # Skip invalid folders
+            if not os.path.isdir(folder_path) or not is_valid_folder(folder_name):
+                continue
 
-    print("Fetching project ID...")
-    project_id = get_project_id(PROJECT_PATH)
+            # Generate the domain attribute
+            domain = folder_name if ".com" in folder_name else f"{folder_name}.com"
 
-    """print("Fetching repository tree...")
-    tree = fetch_repository_tree(project_id, BRANCH)
+            for root, _, files in os.walk(folder_path):
+                for file in files:
+                    if "terms of service" in file.lower():
+                        file_path = os.path.join(root, file)
+                        print(f"Analyzing: {file_path}")
 
-    print("Processing files...")
-    process_files(project_id, tree, DOWNLOAD_DIR)
-    """
+                        with open(file_path, "r", encoding="utf-8") as f:
+                            terms_text = f.read()
 
+                        # Skip non-English files
+                        if not is_english(terms_text):
+                            print(f"Skipping non-English file: {file_path}")
+                            continue
+
+                        text_chunks = split_into_sentences(terms_text)
+                        text = " ".join(text_chunks) 
+
+                        category_grades = {}
+                        category_reasons = {}
+
+                    # Single API call for all categories
+                        category_grades, category_reasons = evaluate_all_categories(text)
+                        print(category_grades)
+                        print(category_reasons)
+                        # Calculate the overall grade
+                        if category_grades:
+                            overall_grade = calculate_overall_grade(category_grades, weights)
+                        else:
+                            overall_grade = "N/A"
+
+                        # Save the results
+                        results[folder_name] = {
+                            "domain": domain,
+                            "folderName": folder_name,
+                            "overallGrade": overall_grade,
+                            "categories": {
+                                category:{
+                                    "grade": category_grades.get(category, "N/A"),
+                                    "reasons": category_reasons.get(category,[]),
+                                }
+                                for category in categories
+                            }
+                        }
+                        return results
+    except Exception as e:
+        print(f"Error analyzinf folder {parent_folder}: {e}")
+        success = False
+    return results if success else None
+
+# Run the program
 if __name__ == "__main__":
-    main()
+    parent_folder = r"C:\Users\Tom\Desktop\ClientDev\contrib-versions-main"
+
+    if os.path.isdir(parent_folder):
+        evaluation_results = analyze_terms_in_folders(parent_folder)
+
+        # Display results clearly
+        for folder, result in evaluation_results.items():
+            print(f"\nFolder: {result['folderName']}")  # Folder name
+            print(f"Domain: {result['domain']}")  # Domain name
+            print(f"Overall Grade: {result['overallGrade']}")  # Overall grade
+        
+        # Loop through categories
+            for category, category_data in result["categories"].items():
+                print(f"  {category}: {category_data['grade']}")
+                reasons = category_data["reasons"]
+                if reasons:
+                    print("  Top 3 Reasons:")
+                    for i, reason in enumerate(reasons, start=1):
+                        print(f"    {i}. {reason}")
+                else:
+                    print("  Top 3 Reasons: None provided.")
+
+    else:
+        print("The specified path is not a valid directory.")
