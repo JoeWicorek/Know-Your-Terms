@@ -11,19 +11,6 @@
     padding: 0;
     box-sizing: border-box;
 }
-
-/* The quiz container itself */
-.quiz-container {
-    width: 40%;
-    padding: 60px;
-    background-color: #79B4D1;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    font-family: Arial, sans-serif;
-    margin: 250px; 
-  
-}
-
 /* DigitalFootprintQuiz.css */
 
 .quiz-title {
@@ -98,3 +85,19 @@
     font-weight: bold;
     color: #ff4500;
 }
+/* The quiz container itself */
+.quiz-container {
+    width: 60%;
+    padding: 70px; 
+    background-color: #79B4D1;
+    border-radius: 10px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+}
+.flex {
+    justify-content: center;
+    align-items: center;
+    display: flex; 
+    width: 100%;
+}
+
