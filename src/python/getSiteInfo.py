@@ -1,13 +1,18 @@
 import os
 import re
 import openai
+from dotenv import load_dotenv
 from langdetect import detect, DetectorFactory
+
+load_dotenv()
 
 # Set seed for consistent language detection
 DetectorFactory.seed = 0
 
 # Set up OpenAI API Key
-openai.api_key = "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"
+#openai.api_key = os.getenv('OPEN_AI_API_KEY')
+openai.api_key = "your api key here"
+
 
 # Function to check if the folder name matches the criteria
 def is_valid_folder(folder_name):
@@ -56,7 +61,7 @@ def evaluate_all_categories(text):
         print(category_reasons)
         return category_grades, category_reasons
     except Exception as e:
-        print(f"Error during evaluation for category '{category}': {e}")
+        print(f"Error during evaluation: {e}")
         return "F", ["Error in generating reasons."]
 
 def parse_response(response_text):
@@ -207,7 +212,7 @@ def analyze_terms_in_folders(parent_folder):
                         }
                         return results
     except Exception as e:
-        print(f"Error analyzinf folder {parent_folder}: {e}")
+        print(f"Error analyzing folder {parent_folder}: {e}")
         success = False
     return results if success else None
 
