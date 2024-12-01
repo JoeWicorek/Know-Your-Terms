@@ -59,7 +59,8 @@ function DigitalFootprintQuiz() {
         return 'High Exposure';
     };
 
-    return (
+    return ( 
+     <div class="flex">
         <div className="quiz-container">
             <h2 className="quiz-title">How Much of Your Digital Information Is Out There?</h2>
             <p className="quiz-description">Check the apps you use to see how much of your digital footprint is exposed.</p>
@@ -91,6 +92,7 @@ function DigitalFootprintQuiz() {
                     <p>Your exposure level is: <strong className="exposure-level">{getGrade()}</strong></p>
                 </div>
             )}
+        </div>
         </div>
     );
 }
