@@ -20,9 +20,9 @@ const gradientBarPlugin = {
 
     // Ensure the chart is rendered
     if (!chartArea || !scales.x) return;
-    console.log("Gradient plugin triggered!");
-    console.log("Chart Area:", chartArea);
-console.log("Scales:", scales);
+    //console.log("Gradient plugin triggered!");
+    //console.log("Chart Area:", chartArea);
+    //console.log("Scales:", scales);
 
     // Create gradient
     const gradient = ctx.createLinearGradient(chartArea.left, 0, chartArea.right, 0);
@@ -37,7 +37,7 @@ console.log("Scales:", scales);
     const gradientHeight = 20; // Height of the gradient bar
     const yPos = scales.x.bottom - 7; // Position just below the x-axis
     ctx.fillRect(chartArea.left, yPos, chartArea.width, gradientHeight);
-    console.log(`Drawing gradient at Y: ${yPos}, Height: ${gradientHeight}`);
+    //console.log(`Drawing gradient at Y: ${yPos}, Height: ${gradientHeight}`);
 
     ctx.restore();
   },
@@ -45,7 +45,7 @@ console.log("Scales:", scales);
 
 Chart.register(gradientBarPlugin);
 
-const grades = ["A+", "B-", "C+", "D-", "E+", "F-"];
+const grades = ["A+", "A", "B+", "B", "B-", "C+", "C", "C-", "D+", "D", "D-", "E+", "F-"];
 const gradePositions = grades.reduce((acc, grade, index) => {
   acc[grade] = index + 1;
   return acc;
@@ -88,6 +88,7 @@ const WebsiteRatingGraph = ({ data,selectedWebsite }) => {
   const maxSize = 30; // Maximum icon size
   const scaleFactor = 0.5; // Scaling factor for size reduction
   const spacingFactor = 2; // Spacing multiplier for y-values
+  console.log(data)
 
   useEffect(() => {
     const preloadFavicons = async () => {
