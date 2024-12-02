@@ -2,6 +2,7 @@
   "homepage": "https://INFO442-24AU-C.github.io/",
   "scripts": {
     "build": "react-scripts build",
+    "start": "react-scripts start",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
