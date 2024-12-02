@@ -7,7 +7,7 @@
     transition: transform 0.3s ease;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     background-color: #ffffff;
-    padding: 10px; /* Reduced padding */
+    padding: 20px;
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -29,7 +29,7 @@
 }
 
 .slick-slide {
-    padding: 0; /* Removed padding to minimize space */
+    padding: 15px;
 }
 
 .slick-center {
@@ -42,26 +42,28 @@
     color: #333;
 }
 
+
 .footer {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 0; /* Removed margin-top to reduce space */
-    padding: 10px; /* Reduced padding to minimize space */
+    margin-top: 40px;
+    padding: 20px;
     background-color: #2D789E;
-}
-
-.footer .title {
+  }
+  
+  .footer .title {
     text-transform: uppercase;
     font-weight: bold;
     letter-spacing: 1px;
     font-size: 0.5em;
     color: #FFFFFF;
-}
+  }
+  
 
-/* Carousel.css */
+  /* Carousel.css */
 .slick-dots {
-    bottom: -1px; /* Adjust the value as needed to move the dots closer to the carousel */
+    bottom: -10px; /* Adjust the value as needed to move the dots closer to the carousel */
     position: relative; /* You can adjust the positioning to suit your needs */
 }
 

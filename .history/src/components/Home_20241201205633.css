@@ -4,7 +4,7 @@
   flex-direction: column; /* Stack content vertically */
   align-items: center; /* Center items horizontally */
   min-height: 100vh; /* Full viewport height */
-  background-color: white; /* Light background color */
+  background-color: ; /* Light background color */
   padding: 20px; /* Padding around the content */
   border-left: 10px solid #ddd; /* Left border */
   border-right: 10px solid #ddd; /* Right border */

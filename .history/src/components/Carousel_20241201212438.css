@@ -1,0 +1,88 @@
+/* Carousel.css */
+
+.card {
+    position: relative;
+    border-radius: 15px; /* Increased radius for a smoother look */
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); /* Enhanced shadow for better depth */
+    background-color: #ffffff;
+    padding: 20px; /* Increased padding for better spacing */
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    max-height: 500px; /* Limits the card height */
+    overflow-y: auto; /* Allows scrolling if content exceeds */
+}
+
+.article-content h3 {
+    font-size: 2em; /* Increased font size for better readability */
+    color: #222; /* Darkened color for better contrast */
+    margin-bottom: 15px; /* Increased margin for better spacing */
+}
+
+.article-content p {
+    font-size: 1.1em; /* Slightly increased font size for readability */
+    line-height: 1.8; /* Improved line spacing for better readability */
+    color: #444; /* Darkened color for improved contrast */
+    margin-bottom: 15px; /* Increased margin for better spacing */
+}
+
+.slick-slide {
+    padding: 10px; /* Added padding to create space between slides */
+}
+
+.slick-center {
+    transform: scale(1.1); /* Increased scaling for better focus */
+}
+
+.custom-arrow {
+    z-index: 2;
+    font-size: 2.5rem; /* Increased size for better visibility */
+    color: #555; /* Lighter color for a softer look */
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.custom-arrow:hover {
+    color: #000; /* Darken color on hover for better interaction feedback */
+}
+
+.custom-arrow.prev-arrow {
+    left: -25px; /* Adjusted positioning for better visibility */
+}
+
+.custom-arrow.next-arrow {
+    right: -25px; /* Adjusted positioning for better visibility */
+}
+
+.footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px; /* Added slight margin to separate from content */
+    padding: 10px; /* Increased padding for a more balanced look */
+    background-color: #1E5B80; /* Darkened background for a more elegant look */
+}
+
+.footer .title {
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 1.5px; /* Increased letter spacing for better readability */
+    font-size: 0.8em; /* Increased font size for better visibility */
+    color: #FFFFFF;
+}
+
+/* Carousel.css */
+.slick-dots {
+    bottom: -1px; /* Adjust the value as needed to move the dots closer to the carousel */
+    position: relative; /* You can adjust the positioning to suit your needs */
+}
+
+.slick-dots li button:before {
+    font-size: 12px; /* Adjust the size if needed */
+    color: #000; /* Set your preferred color */
+}

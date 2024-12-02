@@ -40,6 +40,18 @@
     z-index: 2;
     font-size: 2rem;
     color: #333;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+.custom-arrow.prev-arrow {
+    left: -25px; /* Adjust as needed to position the arrow */
+}
+
+.custom-arrow.next-arrow {
+    right: -25px; /* Adjust as needed to position the arrow */
 }
 
 .footer {
