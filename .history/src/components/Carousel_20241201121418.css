@@ -43,20 +43,5 @@
 }
 
 
-.footer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 40px;
-    padding: 20px;
-    background-color: #2D789E;
-  }
-  
-  .footer .title {
-    text-transform: uppercase;
-    font-weight: bold;
-    letter-spacing: 1px;
-    font-size: 0.5em;
-    color: #FFFFFF;
-  }
-  
+
+

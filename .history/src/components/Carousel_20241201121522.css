@@ -43,20 +43,16 @@
 }
 
 
-.footer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 40px;
-    padding: 20px;
-    background-color: #2D789E;
-  }
-  
-  .footer .title {
-    text-transform: uppercase;
-    font-weight: bold;
-    letter-spacing: 1px;
-    font-size: 0.5em;
-    color: #FFFFFF;
-  }
-  
+
+
+
+/* If you want to move the track upwards */
+.slick-track {
+    position: relative;
+    top: -20px; /* Adjust accordingly */
+}
+
+/* You can also add some margin or padding to move the slides */
+.slick-slide {
+    padding-top: 5px; /* Adjust as needed */
+}
