@@ -18,7 +18,15 @@ const gradientBarPlugin = {
   beforeDatasetsDraw(chart) {
     const { ctx, chartArea, scales } = chart;
     if (!chartArea || !scales.x) return;
+<<<<<<< HEAD
     
+=======
+    //console.log("Gradient plugin triggered!");
+    //console.log("Chart Area:", chartArea);
+    //console.log("Scales:", scales);
+
+    // Create gradient
+>>>>>>> b55a953695c41f579cfbadcff8b7783e8c4ce7ed
     const gradient = ctx.createLinearGradient(chartArea.left, 0, chartArea.right, 0);
     gradient.addColorStop(0, "#98D8A1");    // Light green
     gradient.addColorStop(0.25, "#B6E6AA"); // Green-yellow
@@ -30,15 +38,25 @@ const gradientBarPlugin = {
     
     ctx.save();
     ctx.fillStyle = gradient;
+<<<<<<< HEAD
     const gradientHeight = 6;
     ctx.fillRect(chartArea.left, yPos - (gradientHeight/2), chartArea.right - chartArea.left, gradientHeight);
+=======
+
+    // Draw the gradient bar
+    const gradientHeight = 20; // Height of the gradient bar
+    const yPos = scales.x.bottom - 7; // Position just below the x-axis
+    ctx.fillRect(chartArea.left, yPos, chartArea.width, gradientHeight);
+    //console.log(`Drawing gradient at Y: ${yPos}, Height: ${gradientHeight}`);
+
+>>>>>>> b55a953695c41f579cfbadcff8b7783e8c4ce7ed
     ctx.restore();
   }
 };
 
 Chart.register(gradientBarPlugin);
 
-const grades = ["A+", "B-", "C+", "D-", "E+", "F-"];
+const grades = ["A+", "A", "B+", "B", "B-", "C+", "C", "C-", "D+", "D", "D-", "E+", "F-"];
 const gradePositions = grades.reduce((acc, grade, index) => {
   acc[grade] = index + 1;
   return acc;
@@ -76,6 +94,14 @@ const preprocessImage = (img, targetSize = 96, highlight = false) => {
 const WebsiteRatingGraph = ({ data, selectedWebsite }) => {
   const [hoveredWebsite, setHoveredWebsite] = useState(null);
   const [imageElements, setImageElements] = useState({});
+<<<<<<< HEAD
+=======
+  const minSize = 10; // Minimum icon size
+  const maxSize = 30; // Maximum icon size
+  const scaleFactor = 0.5; // Scaling factor for size reduction
+  const spacingFactor = 2; // Spacing multiplier for y-values
+  console.log(data)
+>>>>>>> b55a953695c41f579cfbadcff8b7783e8c4ce7ed
 
   useEffect(() => {
     const loadImages = () => {

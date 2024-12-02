@@ -1,8 +1,5 @@
+/* General container styles */
 .quiz-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center; /* Center vertically */
-    align-items: center;
     height: 800px;
     font-family: 'Arial', sans-serif;
     max-width: 600px;
@@ -13,10 +10,9 @@
     border-radius: 10px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     text-align: center; /* Centers text inside */
+    padding: 60px 20px 20px 20px; /* Increase top padding to move text down */
+
 }
-
-
-
 
 /* Title styling */
 .quiz-title {
@@ -177,23 +173,3 @@ li {
     font-weight: bold;
     font-size: 18px;
 }
-
-
-
-.footer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 40px;
-    padding: 20px;
-    background-color: #2D789E;
-  }
-  
-  .footer .title {
-    text-transform: uppercase;
-    font-weight: bold;
-    letter-spacing: 1px;
-    font-size: 0.5em;
-    color: #FFFFFF;
-  }
-  

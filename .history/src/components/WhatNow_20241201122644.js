@@ -105,10 +105,10 @@ function WhatNow() {
                     />
                 </div>
             </Slider>
-            <footer className="footer">
-                <h2 className="title">WHAT ARE YOU REALLY AGREEING TO?</h2>
-            </footer>
         </div>
+         <footer className="footer">
+        <h2 className="title">WHAT ARE YOU REALLY AGREEING TO?</h2>
+      </footer>
     );
 }
 

@@ -99,50 +99,46 @@ function TermsOfServiceQuiz() {
         return 'F';
     };
 
-    return (
-        <div className="flex">
-            <div className="quiz-container">
-                <h2 className="quiz-title">Terms of Service: Platform Evaluation</h2>
-                <p className="quiz-description">Select the platforms you want to evaluate based on their terms of service.</p>
+    return ( 
+     <div class="flex">
+        <div className="quiz-container">
+            <h2 className="quiz-title">Terms of Service: Platform Evaluation</h2>
+            <p className="quiz-description">Select the platforms you want to evaluate based on their terms of service.</p>
 
-                {/* Render categorized platform options */}
-                {Object.entries(platforms).map(([category, platforms]) => (
-                    <div key={category} className="quiz-group">
-                        <h3 className="quiz-group-title">{category}</h3>
-                        <div className="quiz-options">
-                            {Object.keys(platforms).map((platform) => (
-                                <div key={platform} className="quiz-option">
-                                    <label className="quiz-label">
-                                        <input
-                                            type="checkbox"
-                                            name={platform}
-                                            checked={!!answers[platform]}
-                                            onChange={handleChange}
-                                            className="quiz-checkbox"
-                                        />
-                                        {platform}
-                                    </label>
-                                </div>
-                            ))}
-                        </div>
+            {/* Render categorized platform options */}
+            {Object.entries(platforms).map(([category, platforms]) => (
+                <div key={category} className="quiz-group">
+                    <h3 className="quiz-group-title">{category}</h3>
+                    <div className="quiz-options">
+                        {Object.keys(platforms).map((platform) => (
+                            <div key={platform} className="quiz-option">
+                                <label className="quiz-label">
+                                    <input
+                                        type="checkbox"
+                                        name={platform}
+                                        checked={!!answers[platform]}
+                                        onChange={handleChange}
+                                        className="quiz-checkbox"
+                                    />
+                                    {platform}
+                                </label>
+                            </div>
+                        ))}
                     </div>
-                ))}
+                </div>
+            ))}
 
-                <button onClick={calculatePercentage} className="quiz-button">
-                    Get Your Evaluation Percentage
-                </button>
+            <button onClick={calculatePercentage} className="quiz-button">
+                Get Your Evaluation Percentage
+            </button>
 
-                {percentage !== null && (
-                    <div className="quiz-result">
-                        <h3>Your Average Percentage: <span className="percentage">{percentage.toFixed(2)}%</span></h3>
-                        <p>Your overall grade: <strong className="grade">{getGrade()}</strong></p>
-                    </div>
-                )}
-            </div>
-
-            <footer className="footer">
-                <h2 className="title">WHAT ARE YOU REALLY AGREEING TO?</h2>
-            </footer>
+            {percentage !== null && (
+                <div className="quiz-result">
+                    <h3>Your Average Percentage: <span className="percentage">{percentage.toFixed(2)}%</span></h3>
+                    <p>Your overall grade: <strong className="grade">{getGrade()}</strong></p>
+                </div>
+            )}
+        </div>
         </div>
     );
 }
