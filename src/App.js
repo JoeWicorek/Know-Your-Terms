@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';  // Import global styles here
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { HashRouter as Router, Route, Routes } from 'react-router-dom';
 import Nav from './components/Nav';  // Use Nav instead of Navbar
 import Home from './components/Home';
 import Quiz from './components/Quiz';
