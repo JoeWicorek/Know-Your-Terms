@@ -45,11 +45,7 @@ const Home = () => {
       {selectedWebsite && (
         <div className="info-card">
           <h2>{selectedWebsite.name}</h2>
-          <img
-            src={selectedWebsite.icon}
-            alt={`${selectedWebsite.name} logo`}
-            style={{ width: "50px", height: "50px" }}
-          />
+          
           <p><strong>Rating:</strong> {selectedWebsite.rating}</p>
           <p>{selectedWebsite.description}</p>
         </div>
