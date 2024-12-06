@@ -85,7 +85,4 @@ The build output will be in the `/build` directory, ready for deployment.
 - **🤝 Community Channels**: Connect users to privacy advocacy groups.
 - **🤖 AI Integration**: Automatically analyze and grade ToS for user-specified websites.
 
----
-
-🎉 *Thank you for contributing to a more transparent internet!*
 
