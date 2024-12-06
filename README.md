@@ -17,7 +17,6 @@
 ### 3. 📝 **Info Cards**
    - Highlights essential details about each website, including:
      - 🖊️ Name
-     - 🎨 Logo
      - ⭐ Rating
      - 🔍 Description of ToS compliance.
 
