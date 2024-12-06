@@ -48,8 +48,8 @@
 ### 🚀 Getting Started
 1. Clone the repository:
    ```bash
-   git clone https://github.com/<your-repo-url>.git
-   cd <your-repo-name>
+   git clone https://github.com/INFO442-24AU-C/Group-3.git
+   cd <group-3>
    ```
 
 2. Install dependencies:
