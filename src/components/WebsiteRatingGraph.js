@@ -168,6 +168,17 @@ const WebsiteRatingGraph = ({ data, selectedWebsite }) => {
         borderColor: '#ddd',
         borderWidth: 1,
         padding: 10,
+        callbacks: {
+          // Modify the tooltip label
+          label: function(tooltipItem) {
+            const datasetIndex = tooltipItem.datasetIndex;
+            const index = tooltipItem.dataIndex;
+            const website = data[datasetIndex]; // Access the website data
+  
+            // Return the website's grade
+            return `${website.name}: Grade ${website.rating}`;
+          }
+        }
       },
     },
     scales: {

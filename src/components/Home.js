@@ -13,7 +13,7 @@ const Home = () => {
 
     // Find the website that matches the search query
     const matchedWebsite = websiteData.find((site) =>
-      site.name.toLowerCase().includes(query)
+      site.name.toLowerCase().startsWith(query)
     );
       // Set selectedWebsite to null if the search query is cleared
       setSelectedWebsite(query ? matchedWebsite || null : null);
