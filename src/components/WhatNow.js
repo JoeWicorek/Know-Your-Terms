@@ -20,6 +20,26 @@ function WhatNow() {
     return (
         <div style={{ width: '80%', margin: '0 auto', paddingTop: '50px' }}>
             <Slider {...settings}>
+            {/* First Slide: YouTube Video */}
+                <div className="card" style={{disaply: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                    <iframe width="60%" 
+                    height="500px" 
+                    src="https://www.youtube.com/embed/yzyafieRcWE?si=2GKOpVxeqSUE3B1S&amp;start=35" 
+                    title="YouTube video player" 
+                    style={{
+                        width: '60%',
+                        height: '500px',
+                        border: 'none',
+                        borderRadius: '10px',
+                        margin: '20px auto',
+                        display: 'block',
+                    }}
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    referrerpolicy="strict-origin-when-cross-origin" 
+                    allowfullscreen></iframe>
+                </div>
+
                 <div className="card">
                     <iframe
                         src="https://www.thecyberhelpline.com/helpline-blog/2024/5/14/simple-steps-for-reducing-your-digital-footprint-on-social-media"
