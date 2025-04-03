@@ -1,14 +1,9 @@
 {
-  "homepage": "https://INFO442-24AU-C.github.io/Group-3",
-  "scripts": {
-    "build": "react-scripts build",
-    "start": "react-scripts start",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
-  },
-  "name": "group-3",
+  "homepage": "https://know-your-terms.netlify.app",
+  "name": "know-your-terms",
   "version": "1.0.0",
-  "description": "Afomeya Hallu, Anika Indurkar, Elroe Yayiso, Joe Wicorek",
+  "description": "A platform to help users understand digital agreements by analyzing website Terms of Service",
+  "private": true,
   "main": "index.js",
   "keywords": [],
   "author": "",
@@ -27,6 +22,14 @@
     "react-slick": "^0.30.2",
     "slick-carousel": "^1.8.1"
   },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "netlify deploy --prod"
+  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -41,6 +44,7 @@
   },
   "devDependencies": {
     "gh-pages": "^6.2.0",
-    "html-webpack-plugin": "^5.6.3"
+    "html-webpack-plugin": "^5.6.3",
+    "netlify-cli": "^17.19.0"
   }
 }

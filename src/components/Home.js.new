@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
 import './Home.css';
 import './WebsiteCards.css';
 import WebsiteRatingGraph from './WebsiteRatingGraph';
 import { FaSearch, FaGlobe, FaShieldAlt, FaFileAlt, FaUserLock, FaAccessibleIcon, FaBalanceScale } from 'react-icons/fa';
+import ErrorBoundary from './ErrorBoundary';
 
 // Sample website data
 const websiteData = [
@@ -295,87 +295,7 @@ function Home() {
 
   // Get logo URL with fallback
   const getLogoUrl = (website) => {
-    if (website.logo) {
-      return website.logo;
-    } else if (website.url) {
-      // Try to get logo from Clearbit
-      const domain = website.url.replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0];
-      return `https://logo.clearbit.com/${domain}?size=120`;
-    }
-    return '';
-  };
-
-  // Handle image loading error
-  const handleImageError = (e, websiteName) => {
-    // Create a canvas for the fallback image
-    const canvas = document.createElement('canvas');
-    const size = 120;
-    canvas.width = size;
-    canvas.height = size;
-    const ctx = canvas.getContext('2d');
-    
-    // Get the first letter of the website name
-    const initial = websiteName ? websiteName.charAt(0).toUpperCase() : 'W';
-    
-    // Create a gradient background based on the initial
-    let gradient;
-    switch (initial) {
-      case 'F': // Facebook
-        gradient = ctx.createLinearGradient(0, 0, size, size);
-        gradient.addColorStop(0, '#3b5998');
-        gradient.addColorStop(1, '#4267B2');
-        break;
-      case 'G': // Google
-        gradient = ctx.createLinearGradient(0, 0, size, size);
-        gradient.addColorStop(0, '#4285F4');
-        gradient.addColorStop(0.33, '#34A853');
-        gradient.addColorStop(0.66, '#FBBC05');
-        gradient.addColorStop(1, '#EA4335');
-        break;
-      case 'T': // Twitter
-        gradient = ctx.createLinearGradient(0, 0, size, size);
-        gradient.addColorStop(0, '#1DA1F2');
-        gradient.addColorStop(1, '#5EAADE');
-        break;
-      case 'A': // Apple, Amazon
-        gradient = ctx.createLinearGradient(0, 0, size, size);
-        gradient.addColorStop(0, '#555555');
-        gradient.addColorStop(1, '#000000');
-        break;
-      default:
-        gradient = ctx.createLinearGradient(0, 0, size, size);
-        gradient.addColorStop(0, '#2D789E');
-        gradient.addColorStop(1, '#4A90E2');
-    }
-    
-    // Draw a circle with the gradient
-    ctx.beginPath();
-    ctx.arc(size/2, size/2, size/2 - 2, 0, Math.PI * 2);
-    ctx.fillStyle = gradient;
-    ctx.fill();
-    
-    // Add a subtle highlight
-    const highlight = ctx.createRadialGradient(size * 0.3, size * 0.3, size * 0.1, size * 0.5, size * 0.5, size);
-    highlight.addColorStop(0, 'rgba(255, 255, 255, 0.2)');
-    highlight.addColorStop(1, 'rgba(255, 255, 255, 0)');
-    ctx.fillStyle = highlight;
-    ctx.fill();
-    
-    // Add the initial letter
-    ctx.fillStyle = '#FFFFFF';
-    ctx.font = 'bold 60px Inter, Arial, sans-serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(initial, size/2, size/2);
-    
-    // Set the canvas as the image source
-    e.target.src = canvas.toDataURL('image/png');
-    
-    // Remove the data-failed attribute to prevent blue background
-    e.target.removeAttribute('data-failed');
-    
-    // Add a class to indicate this is a custom fallback
-    e.target.classList.add('custom-fallback');
+    return website.logo || `https://via.placeholder.com/150/2D789E/FFFFFF?text=${website.name ? website.name.charAt(0).toUpperCase() : 'W'}`;
   };
 
   // Get grade letter based on score
@@ -464,274 +384,231 @@ function Home() {
   };
 
   return (
-    <div className="home-container">
-      {/* Hero Section with Integrated Search */}
-      <div className="hero-section">
-        <h1 className="hero-title">Know Your <span className="highlight">Terms</span></h1>
-        <p className="hero-subtitle">
-          Understand what you're agreeing to when you click "I Accept" on Terms of Service agreements
-        </p>
-        
-        {/* Prominent Search Bar */}
-        <div className="hero-search">
-          <div className="search-container">
-            <input
-              type="text"
-              className="search-input"
-              placeholder="Search for a website or app..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              onKeyPress={handleKeyPress}
-            />
-            <button className="search-button" onClick={handleSearch}>
-              <FaSearch className="search-icon" />
-              Search
-            </button>
-          </div>
-        </div>
-        
-        <div className="hero-cta">
-          <button 
-            className="btn btn-accent"
-            onClick={() => {
-              const ratingSection = document.getElementById('rating-graph-section');
-              if (ratingSection) {
-                ratingSection.scrollIntoView({ behavior: 'smooth' });
-              }
-            }}
-          >
-            Explore Ratings
-          </button>
-        </div>
-      </div>
-
-      {/* Website Rating Graph Section */}
-      <div id="rating-graph-section" className="graph-section">
-        <h2 className="section-title">Website Privacy Rating Graph</h2>
-        <p className="section-description">
-          Explore how popular websites rate in terms of their privacy policies and terms of service.
-        </p>
-        <div className="graph-wrapper">
-          <WebsiteRatingGraph />
-        </div>
-      </div>
-
-      {/* Popular Websites Section with Better Image Handling */}
-      <div className="popular-websites-section">
-        <h2 className="section-title">Popular Websites</h2>
-        <p className="section-description">
-          Click on any website to see detailed ratings and analysis of their Terms of Service.
-        </p>
-        
-        <div className="websites-grid">
-          {filteredWebsites && filteredWebsites.length > 0 ? (
-            filteredWebsites.slice(0, 12).map((website, index) => (
-              <div
-                key={website.id}
-                className="website-card"
-                onClick={() => handleWebsiteSelect(website)}
-                style={{ '--animation-delay': index }}
-              >
-                <div className="website-card-content">
-                  <div className="website-logo-container" data-initial={website.name ? website.name.charAt(0).toUpperCase() : 'W'}>
-                    {getLogoUrl(website) ? (
-                      <img 
-                        src={getLogoUrl(website)} 
-                        alt={`${website.name} logo`} 
-                        className="website-logo"
-                        onError={(e) => handleImageError(e, website.name)}
-                        data-initial={website.name.charAt(0).toUpperCase()}
-                        loading="lazy"
-                        crossOrigin="anonymous"
-                      />
-                    ) : (
-                      <div className="website-logo-fallback" data-initial={website.name.charAt(0).toUpperCase()}></div>
-                    )}
-                  </div>
-                  <div className="website-card-info">
-                    <h3 className="website-name">{website.name}</h3>
-                    <div className={`rating-badge ${getGradeClass(website.overallScore)}`}>
-                      {website.rating}
-                    </div>
-                  </div>
-                </div>
-                <div className="website-card-overlay">
-                  <span>View Details</span>
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className="no-results">
-              <p>No websites found matching your search criteria.</p>
+    <ErrorBoundary>
+      <div className="home-container">
+        {/* Hero Section with Integrated Search */}
+        <div className="hero-section">
+          <h1 className="hero-title">Know Your <span className="highlight">Terms</span></h1>
+          <p className="hero-subtitle">
+            Understand what you're agreeing to when you click "I Accept" on Terms of Service agreements
+          </p>
+          
+          {/* Prominent Search Bar */}
+          <div className="hero-search">
+            <div className="search-container">
+              <input
+                type="text"
+                className="search-input"
+                placeholder="Search for a website or app..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onKeyPress={handleKeyPress}
+              />
+              <button className="search-button" onClick={handleSearch}>
+                <FaSearch className="search-icon" />
+                Search
+              </button>
             </div>
-          )}
-        </div>
-        
-        {filteredWebsites && filteredWebsites.length > 12 && (
-          <div className="view-more-container">
+          </div>
+          
+          <div className="hero-cta">
             <button 
-              className="btn btn-secondary"
+              className="btn btn-accent"
               onClick={() => {
-                // Show all websites
-                setFilteredWebsites(websiteData);
+                const ratingSection = document.getElementById('rating-graph-section');
+                if (ratingSection) {
+                  ratingSection.scrollIntoView({ behavior: 'smooth' });
+                }
               }}
             >
-              View More Websites
+              Explore Ratings
             </button>
           </div>
-        )}
-      </div>
+        </div>
 
-      {/* Selected Website Information */}
-      {selectedWebsite && (
-        <div className="selected-website">
-          <div className="selected-website-header">
-            <div className="selected-website-logo-container" data-initial={selectedWebsite.name ? selectedWebsite.name.charAt(0).toUpperCase() : 'W'}>
-              <img
-                src={getLogoUrl(selectedWebsite)}
-                alt={`${selectedWebsite.name || 'Website'} logo`}
-                className="selected-website-logo"
-                width="120"
-                height="120"
-                loading="lazy"
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.style.opacity = "0";
-                }}
-              />
-            </div>
-            <div className="selected-website-info">
-              <h2 className="selected-website-name">{selectedWebsite.name || 'Unknown Website'}</h2>
-              {selectedWebsite.url && (
-                <a href={selectedWebsite.url} className="selected-website-url" target="_blank" rel="noopener noreferrer">
-                  <FaGlobe /> {selectedWebsite.url}
-                </a>
-              )}
-              <div className="website-tags">
-                {selectedWebsite.categories && Array.isArray(selectedWebsite.categories) 
-                  ? selectedWebsite.categories.map((category, idx) => (
-                      <span key={idx} className="website-tag" style={{ '--animation-delay': idx * 0.1 }}>
-                        {category}
-                      </span>
-                    ))
-                  : <span className="website-tag">General</span>
-                }
-              </div>
-            </div>
-          </div>
-
-          <p className="selected-website-description">
-            {selectedWebsite.description || 'No description available for this website.'}
+        {/* Rating Graph Section */}
+        <div id="rating-graph-section" className="rating-graph-section">
+          <h2 className="section-title">Website Terms of Service Ratings</h2>
+          <p className="section-description">
+            Explore how popular websites rate on their Terms of Service agreements. 
+            Click on any point to learn more about that website's rating.
           </p>
+          <ErrorBoundary>
+            <WebsiteRatingGraph 
+              data={websiteData} 
+              selectedWebsite={selectedWebsite} 
+              onWebsiteSelect={handleWebsiteSelect} 
+            />
+          </ErrorBoundary>
+        </div>
 
-          {selectedWebsite.criteria && (
-            <div className="criteria-grid">
-              {Object.entries(selectedWebsite.criteria).map(([key, value], index) => (
-                <div 
-                  key={key} 
-                  className="criteria-item"
-                  ref={el => criteriaItemsRef.current[index] = el}
-                  style={{ '--animation-delay': index * 0.1 }}
+        {/* Popular Websites Section with Better Image Handling */}
+        <div className="popular-websites-section">
+          <h2 className="section-title">Popular Websites</h2>
+          <p className="section-description">
+            Click on any website to see detailed ratings and analysis of their Terms of Service.
+          </p>
+          
+          <div className="websites-grid">
+            {filteredWebsites && filteredWebsites.length > 0 ? (
+              filteredWebsites.slice(0, 12).map((website, index) => (
+                <div
+                  key={website.id || index}
+                  className="website-card"
+                  onClick={() => handleWebsiteSelect(website)}
+                  ref={el => websiteCardsRef.current[index] = el}
+                  style={{ '--animation-delay': index }}
                 >
-                  <h3 className="criteria-title">
-                    {getCriteriaIcon(key)}
-                    {key.charAt(0).toUpperCase() + key.slice(1)}
-                  </h3>
-                  <div className="criteria-rating">
-                    <span className="criteria-value">{value}</span>
-                    <span className="criteria-max">/5</span>
+                  <div className="website-card-content">
+                    <div className="website-logo-container">
+                      <img
+                        src={getLogoUrl(website)}
+                        alt={`${website.name || 'Website'} logo`}
+                        className="website-logo"
+                        width="80"
+                        height="80"
+                        loading="lazy"
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = `https://via.placeholder.com/150/2D789E/FFFFFF?text=${website.name ? website.name.charAt(0).toUpperCase() : 'W'}`;
+                        }}
+                      />
+                    </div>
+                    <div className="website-card-info">
+                      <h3 className="website-name">{website.name || 'Unknown Website'}</h3>
+                      <span className={`rating-badge ${getGradeClass(website.overallScore || 0)}`}>
+                        {website.rating || getGradeLetter(website.overallScore || 0)}
+                      </span>
+                    </div>
                   </div>
-                  <div className="criteria-progress">
-                    <div 
-                      className="criteria-progress-bar" 
-                      style={{ width: `${(value / 5) * 100}%` }}
-                    ></div>
+                  <div className="website-card-overlay">
+                    <span>View Details</span>
                   </div>
-                  <p className="criteria-description">
-                    {getCriteriaDescription(key, value)}
-                  </p>
                 </div>
-              ))}
+              ))
+            ) : (
+              <div className="no-results">
+                <p>No websites found matching your search criteria.</p>
+              </div>
+            )}
+          </div>
+          
+          {filteredWebsites && filteredWebsites.length > 12 && (
+            <div className="view-more-container">
+              <button 
+                className="btn btn-secondary"
+                onClick={() => {
+                  // Show all websites
+                  setFilteredWebsites(websiteData);
+                }}
+              >
+                View More Websites
+              </button>
             </div>
           )}
-          
-          <div className="action-buttons">
-            <Link to="/quiz" className="btn btn-primary">
-              Explore Quizzes
-            </Link>
-            <Link to="/whatnow" className="btn btn-secondary">
-              Learn More
-            </Link>
-          </div>
         </div>
-      )}
-      
-      {/* Call to Action Section */}
-      <div className="cta-section">
-        <h2 className="cta-title">Take Control of Your Digital Footprint</h2>
-        <p className="cta-description">
-          Learn more about how to protect your privacy and understand the terms you're agreeing to online.
-        </p>
-        <div className="quiz-cards-container">
-          <Link to="/quiz" className="quiz-card main-quiz-card">
-            <div className="quiz-card-icon">
-              <FaShieldAlt />
+
+        {/* Selected Website Information */}
+        {selectedWebsite && (
+          <div className="selected-website">
+            <div className="selected-website-header">
+              <div className="selected-website-logo-container">
+                <img
+                  src={getLogoUrl(selectedWebsite)}
+                  alt={`${selectedWebsite.name || 'Website'} logo`}
+                  className="selected-website-logo"
+                  width="100"
+                  height="100"
+                  loading="lazy"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = `https://via.placeholder.com/150/2D789E/FFFFFF?text=${selectedWebsite.name ? selectedWebsite.name.charAt(0).toUpperCase() : 'W'}`;
+                  }}
+                />
+              </div>
+              <div className="selected-website-info">
+                <h2 className="selected-website-name">{selectedWebsite.name || 'Unknown Website'}</h2>
+                {selectedWebsite.url && (
+                  <a href={selectedWebsite.url} className="selected-website-url" target="_blank" rel="noopener noreferrer">
+                    <FaGlobe /> {selectedWebsite.url}
+                  </a>
+                )}
+                <div className="website-tags">
+                  {selectedWebsite.categories && Array.isArray(selectedWebsite.categories) 
+                    ? selectedWebsite.categories.map((category, idx) => (
+                        <span key={idx} className="website-tag" style={{ '--animation-delay': idx }}>
+                          {category}
+                        </span>
+                      ))
+                    : <span className="website-tag">General</span>
+                  }
+                </div>
+              </div>
             </div>
-            <div className="quiz-card-content">
-              <h3>Explore All Quizzes</h3>
-              <p>Test your knowledge about digital rights, privacy policies, and terms of service.</p>
-              <span className="quiz-card-cta">Start Now →</span>
+
+            <p className="selected-website-description">
+              {selectedWebsite.description || 'No description available for this website.'}
+            </p>
+
+            {selectedWebsite.criteria && (
+              <div className="criteria-grid">
+                {Object.entries(selectedWebsite.criteria).map(([key, value], index) => (
+                  <div 
+                    key={key} 
+                    className="criteria-item"
+                    ref={el => criteriaItemsRef.current[index] = el}
+                    style={{ '--animation-delay': index }}
+                  >
+                    <h3 className="criteria-title">
+                      {getCriteriaIcon(key)}
+                      {key.charAt(0).toUpperCase() + key.slice(1)}
+                    </h3>
+                    <div className="criteria-rating">
+                      <span className="criteria-value">{value}</span>
+                      <span className="criteria-max">/5</span>
+                    </div>
+                    <div className="criteria-progress">
+                      <div 
+                        className="criteria-progress-bar" 
+                        style={{ width: `${(value / 5) * 100}%` }}
+                      ></div>
+                    </div>
+                    <p className="criteria-description">
+                      {getCriteriaDescription(key, value)}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
+            
+            <div className="action-buttons">
+              <a href="#/quiz" className="btn btn-primary">
+                Take the Quiz
+              </a>
+              <a href="#/whatnow" className="btn btn-secondary">
+                Learn More
+              </a>
             </div>
-          </Link>
-          
-          <div className="quiz-cards-grid">
-            <Link to="/privacy-challenge" className="quiz-card">
-              <div className="quiz-card-icon">
-                <FaUserLock />
-              </div>
-              <div className="quiz-card-content">
-                <h3>Privacy Challenge</h3>
-                <p>Identify concerning privacy policy clauses.</p>
-                <span className="quiz-card-cta">Take Challenge →</span>
-              </div>
-            </Link>
-            
-            <Link to="/digital-rights-assessment" className="quiz-card">
-              <div className="quiz-card-icon">
-                <FaShieldAlt />
-              </div>
-              <div className="quiz-card-content">
-                <h3>Digital Rights Assessment</h3>
-                <p>Learn about your rights in the digital world.</p>
-                <span className="quiz-card-cta">Start Assessment →</span>
-              </div>
-            </Link>
-            
-            <Link to="/terms-quiz" className="quiz-card">
-              <div className="quiz-card-icon">
-                <FaFileAlt />
-              </div>
-              <div className="quiz-card-content">
-                <h3>Terms of Service Quiz</h3>
-                <p>Understand the legal implications of ToS.</p>
-                <span className="quiz-card-cta">Start Quiz →</span>
-              </div>
-            </Link>
-            
-            <Link to="/about" className="quiz-card">
-              <div className="quiz-card-icon">
-                <FaGlobe />
-              </div>
-              <div className="quiz-card-content">
-                <h3>About the Project</h3>
-                <p>Learn more about Know Your Terms.</p>
-                <span className="quiz-card-cta">Read More →</span>
-              </div>
-            </Link>
+          </div>
+        )}
+        
+        {/* Call to Action Section */}
+        <div className="cta-section">
+          <h2 className="cta-title">Take Control of Your Digital Footprint</h2>
+          <p className="cta-description">
+            Learn more about how to protect your privacy and understand the terms you're agreeing to online.
+          </p>
+          <div className="cta-buttons">
+            <a href="#/quiz" className="btn btn-accent">
+              Take the Quiz
+            </a>
+            <a href="#/about" className="btn btn-secondary">
+              About the Project
+            </a>
           </div>
         </div>
       </div>
-    </div>
+    </ErrorBoundary>
   );
 }
 

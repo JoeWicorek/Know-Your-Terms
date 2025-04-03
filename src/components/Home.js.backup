@@ -1,0 +1,548 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { FaSearch, FaGlobe, FaCalendarAlt, FaShieldAlt, FaFileAlt, FaEye, FaBalanceScale, FaUniversalAccess, FaUserShield } from 'react-icons/fa';
+import './Home.css';
+import WebsiteRatingGraph from './WebsiteRatingGraph';
+import websiteData from '../data/websiteData';
+
+// High-quality website logos
+const websiteLogos = {
+  facebook: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Facebook_f_logo_%282019%29.svg/1200px-Facebook_f_logo_%282019%29.svg.png",
+  instagram: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Instagram_logo_2016.svg/1200px-Instagram_logo_2016.svg.png",
+  twitter: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Logo_of_Twitter.svg/1200px-Logo_of_Twitter.svg.png",
+  tiktok: "https://upload.wikimedia.org/wikipedia/en/thumb/a/a9/TikTok_logo.svg/1200px-TikTok_logo.svg.png",
+  snapchat: "https://upload.wikimedia.org/wikipedia/en/thumb/c/c4/Snapchat_logo.svg/1200px-Snapchat_logo.svg.png",
+  linkedin: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/LinkedIn_logo_initials.png/800px-LinkedIn_logo_initials.png",
+  pinterest: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Pinterest_Logo.svg/1200px-Pinterest_Logo.svg.png",
+  reddit: "https://upload.wikimedia.org/wikipedia/en/thumb/5/58/Reddit_logo_new.svg/1200px-Reddit_logo_new.svg.png",
+  youtube: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/YouTube_full-color_icon_%282017%29.svg/1200px-YouTube_full-color_icon_%282017%29.svg.png",
+  whatsapp: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/1200px-WhatsApp.svg.png",
+  discord: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Logo_of_Discord_%28v3%29.svg/1200px-Logo_of_Discord_%28v3%29.svg.png",
+  telegram: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/1200px-Telegram_logo.svg.png",
+  spotify: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Spotify_logo_without_text.svg/1200px-Spotify_logo_without_text.svg.png",
+  netflix: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Netflix_2015_logo.svg/1200px-Netflix_2015_logo.svg.png",
+  amazon: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/1200px-Amazon_logo.svg.png",
+  google: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/1200px-Google_%22G%22_Logo.svg.png",
+  apple: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Apple_logo_black.svg/1200px-Apple_logo_black.svg.png",
+  microsoft: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Microsoft_logo.svg/1200px-Microsoft_logo.svg.png",
+  twitch: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Twitch_logo.svg/1200px-Twitch_logo.svg.png",
+  github: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Octicons-mark-github.svg/1200px-Octicons-mark-github.svg.png"
+};
+
+// Error boundary component
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error("Error caught by boundary:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="error-container">
+          <h2>Something went wrong.</h2>
+          <p>We're sorry, but there was an error loading this component.</p>
+          <button 
+            className="btn btn-accent"
+            onClick={() => this.setState({ hasError: false })}
+          >
+            Try Again
+          </button>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
+
+function Home() {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredWebsites, setFilteredWebsites] = useState([]);
+  const [selectedWebsite, setSelectedWebsite] = useState(null);
+  const [animateIn, setAnimateIn] = useState(false);
+  const [error, setError] = useState(null);
+  const websiteCardsRef = useRef([]);
+  const criteriaItemsRef = useRef([]);
+
+  useEffect(() => {
+    try {
+      // Initialize with all websites
+      if (websiteData && Array.isArray(websiteData)) {
+        setFilteredWebsites(websiteData);
+      } else {
+        console.warn("Website data is not in the expected format");
+        setFilteredWebsites([]);
+      }
+      
+      // Trigger initial animations
+      setTimeout(() => {
+        setAnimateIn(true);
+      }, 100);
+
+      // Set up intersection observer for website cards
+      const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.1
+      };
+
+      const handleIntersect = (entries, observer) => {
+        entries.forEach((entry, index) => {
+          if (entry.isIntersecting) {
+            // Add animation class with delay based on index
+            setTimeout(() => {
+              if (entry.target) {
+                entry.target.classList.add('animate');
+              }
+            }, index * 100);
+            observer.unobserve(entry.target);
+          }
+        });
+      };
+
+      const observer = new IntersectionObserver(handleIntersect, observerOptions);
+      
+      // Observe all website cards
+      if (websiteCardsRef.current) {
+        websiteCardsRef.current.forEach(card => {
+          if (card) {
+            observer.observe(card);
+          }
+        });
+      }
+
+      // Clean up
+      return () => {
+        if (websiteCardsRef.current) {
+          websiteCardsRef.current.forEach(card => {
+            if (card) {
+              observer.unobserve(card);
+            }
+          });
+        }
+      };
+    } catch (err) {
+      console.error("Error in Home component initialization:", err);
+      setError(err.message);
+    }
+  }, []);
+
+  // Set up intersection observer for criteria items when selected website changes
+  useEffect(() => {
+    if (!selectedWebsite) return;
+
+    try {
+      const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.1
+      };
+
+      const handleIntersect = (entries, observer) => {
+        entries.forEach((entry, index) => {
+          if (entry.isIntersecting) {
+            // Add animation class with delay based on index
+            setTimeout(() => {
+              if (entry.target) {
+                entry.target.classList.add('animate');
+              }
+            }, index * 150);
+            observer.unobserve(entry.target);
+          }
+        });
+      };
+
+      const observer = new IntersectionObserver(handleIntersect, observerOptions);
+      
+      // Observe all criteria items
+      if (criteriaItemsRef.current) {
+        criteriaItemsRef.current.forEach(item => {
+          if (item) {
+            observer.observe(item);
+          }
+        });
+      }
+
+      // Clean up
+      return () => {
+        if (criteriaItemsRef.current) {
+          criteriaItemsRef.current.forEach(item => {
+            if (item) {
+              observer.unobserve(item);
+            }
+          });
+        }
+      };
+    } catch (err) {
+      console.error("Error in criteria items observer:", err);
+    }
+  }, [selectedWebsite]);
+
+  const handleSearch = () => {
+    try {
+      if (!websiteData || !Array.isArray(websiteData)) {
+        setFilteredWebsites([]);
+        return;
+      }
+      
+      const filtered = websiteData.filter(website =>
+        website && website.name && website.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredWebsites(filtered);
+    } catch (err) {
+      console.error("Error in search:", err);
+      setFilteredWebsites([]);
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
+  const handleWebsiteSelect = (website) => {
+    try {
+      setSelectedWebsite(website);
+      // Reset criteria item refs for new animation
+      criteriaItemsRef.current = [];
+    } catch (err) {
+      console.error("Error selecting website:", err);
+    }
+  };
+
+  const getGradeClass = (grade) => {
+    try {
+      if (grade >= 90) return 'grade-a';
+      if (grade >= 80) return 'grade-b';
+      if (grade >= 70) return 'grade-c';
+      if (grade >= 60) return 'grade-d';
+      return 'grade-f';
+    } catch (err) {
+      console.error("Error getting grade class:", err);
+      return 'grade-f';
+    }
+  };
+
+  const getGradeLetter = (grade) => {
+    try {
+      if (grade >= 90) return 'A';
+      if (grade >= 80) return 'B';
+      if (grade >= 70) return 'C';
+      if (grade >= 60) return 'D';
+      return 'F';
+    } catch (err) {
+      console.error("Error getting grade letter:", err);
+      return 'F';
+    }
+  };
+
+  const getCriteriaIcon = (criteria) => {
+    try {
+      switch (criteria.toLowerCase()) {
+        case 'clarity':
+          return <FaFileAlt className="criteria-icon" />;
+        case 'transparency':
+          return <FaEye className="criteria-icon" />;
+        case 'fairness':
+          return <FaBalanceScale className="criteria-icon" />;
+        case 'accessibility':
+          return <FaUniversalAccess className="criteria-icon" />;
+        case 'accountability':
+          return <FaUserShield className="criteria-icon" />;
+        default:
+          return <FaShieldAlt className="criteria-icon" />;
+      }
+    } catch (err) {
+      console.error("Error getting criteria icon:", err);
+      return <FaShieldAlt className="criteria-icon" />;
+    }
+  };
+
+  const getCriteriaDescription = (key, value) => {
+    try {
+      const defaultDescriptions = {
+        clarity: 'How clearly the terms are written and how easy they are to understand.',
+        transparency: 'How open the website is about data collection and usage practices.',
+        fairness: 'How balanced the terms are between user rights and website requirements.',
+        accessibility: 'How easy it is to find, navigate, and understand the terms.',
+        accountability: 'How well the website takes responsibility for its actions and policies.'
+      };
+
+      if (!selectedWebsite) return defaultDescriptions[key] || `Rating for ${key}: ${value}/5`;
+      
+      return (selectedWebsite.criteriaDescriptions && selectedWebsite.criteriaDescriptions[key]) 
+        ? selectedWebsite.criteriaDescriptions[key] 
+        : defaultDescriptions[key] || `Rating for ${key}: ${value}/5`;
+    } catch (err) {
+      console.error("Error getting criteria description:", err);
+      return `Rating for ${key}: ${value}/5`;
+    }
+  };
+
+  // Function to get logo URL or fallback to first letter
+  const getLogoUrl = (website) => {
+    try {
+      if (!website || !website.name) return '';
+      
+      const name = website.name.toLowerCase();
+      // Try to match with our high-quality logos
+      for (const [key, url] of Object.entries(websiteLogos)) {
+        if (name.includes(key)) {
+          return url;
+        }
+      }
+      // Fallback to a placeholder with the first letter
+      return `https://via.placeholder.com/150/2D789E/FFFFFF?text=${website.name.charAt(0).toUpperCase()}`;
+    } catch (err) {
+      console.error("Error getting logo URL:", err);
+      return '';
+    }
+  };
+
+  // If there's an error, show error message
+  if (error) {
+    return (
+      <div className="error-container">
+        <h2>Something went wrong</h2>
+        <p>{error}</p>
+        <button 
+          className="btn btn-accent"
+          onClick={() => window.location.reload()}
+        >
+          Reload Page
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <ErrorBoundary>
+      <div className="home-container">
+        {/* Hero Section with Integrated Search */}
+        <div className={`hero-section ${animateIn ? 'fade-in' : ''}`}>
+          <h1 className="hero-title">Know Your <span className="highlight">Terms</span></h1>
+          <p className="hero-subtitle">
+            Understand what you're agreeing to when you click "I Accept" on Terms of Service agreements
+          </p>
+          
+          {/* Prominent Search Bar - No Animation */}
+          <div className="hero-search">
+            <div className="search-container">
+              <input
+                type="text"
+                className="search-input"
+                placeholder="Search for a website or app..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onKeyPress={handleKeyPress}
+              />
+              <button className="search-button" onClick={handleSearch}>
+                <FaSearch className="search-icon" />
+                Search
+              </button>
+            </div>
+          </div>
+          
+          <div className="hero-cta">
+            <button 
+              className="btn btn-accent"
+              onClick={() => {
+                const ratingSection = document.getElementById('rating-graph-section');
+                if (ratingSection) {
+                  ratingSection.scrollIntoView({ behavior: 'smooth' });
+                }
+              }}
+            >
+              Explore Ratings
+            </button>
+          </div>
+        </div>
+
+        {/* Rating Graph Section */}
+        <div id="rating-graph-section" className="rating-graph-section">
+          <h2 className="section-title">Website Terms of Service Ratings</h2>
+          <p className="section-description">
+            Explore how popular websites rate on their Terms of Service agreements. 
+            Click on any point to learn more about that website's rating.
+          </p>
+          <ErrorBoundary>
+            <WebsiteRatingGraph 
+              data={websiteData} 
+              selectedWebsite={selectedWebsite} 
+              onWebsiteSelect={handleWebsiteSelect} 
+            />
+          </ErrorBoundary>
+        </div>
+
+        {/* Popular Websites Section with Better Image Handling */}
+        <div className="popular-websites-section">
+          <h2 className="section-title">Popular Websites</h2>
+          <p className="section-description">
+            Click on any website to see detailed ratings and analysis of their Terms of Service.
+          </p>
+          
+          <div className="websites-grid">
+            {filteredWebsites && filteredWebsites.length > 0 ? (
+              filteredWebsites.slice(0, 12).map((website, index) => (
+                <div
+                  key={website.id || index}
+                  className="website-card"
+                  onClick={() => handleWebsiteSelect(website)}
+                  ref={el => websiteCardsRef.current[index] = el}
+                >
+                  <div className="website-card-content">
+                    <div className="website-logo-container">
+                      <img
+                        src={getLogoUrl(website)}
+                        alt={`${website.name || 'Website'} logo`}
+                        className="website-logo"
+                        loading="lazy"
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = `https://via.placeholder.com/150/2D789E/FFFFFF?text=${website.name ? website.name.charAt(0).toUpperCase() : 'W'}`;
+                        }}
+                      />
+                    </div>
+                    <div className="website-card-info">
+                      <h3 className="website-name">{website.name || 'Unknown Website'}</h3>
+                      <span className={`rating-badge ${getGradeClass(website.overallScore || 0)}`}>
+                        {website.rating || getGradeLetter(website.overallScore || 0)}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="website-card-overlay">
+                    <span>View Details</span>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="no-results">
+                <p>No websites found matching your search criteria.</p>
+              </div>
+            )}
+          </div>
+          
+          {filteredWebsites && filteredWebsites.length > 12 && (
+            <div className="view-more-container">
+              <button 
+                className="btn btn-secondary"
+                onClick={() => {
+                  // Show all websites
+                  setFilteredWebsites(websiteData);
+                }}
+              >
+                View More Websites
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Selected Website Information */}
+        {selectedWebsite && (
+          <div className="selected-website">
+            <div className="selected-website-header">
+              <div className="selected-website-logo-container">
+                <img
+                  src={getLogoUrl(selectedWebsite)}
+                  alt={`${selectedWebsite.name || 'Website'} logo`}
+                  className="selected-website-logo"
+                  loading="lazy"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = `https://via.placeholder.com/150/2D789E/FFFFFF?text=${selectedWebsite.name ? selectedWebsite.name.charAt(0).toUpperCase() : 'W'}`;
+                  }}
+                />
+              </div>
+              <div className="selected-website-info">
+                <h2 className="selected-website-name">{selectedWebsite.name || 'Unknown Website'}</h2>
+                {selectedWebsite.url && (
+                  <a href={selectedWebsite.url} className="selected-website-url" target="_blank" rel="noopener noreferrer">
+                    <FaGlobe /> {selectedWebsite.url}
+                  </a>
+                )}
+                <div className="website-tags">
+                  {selectedWebsite.categories && Array.isArray(selectedWebsite.categories) 
+                    ? selectedWebsite.categories.map((category, idx) => (
+                        <span key={idx} className="website-tag">{category}</span>
+                      ))
+                    : <span className="website-tag">General</span>
+                  }
+                </div>
+              </div>
+            </div>
+
+            <p className="selected-website-description">
+              {selectedWebsite.description || 'No description available for this website.'}
+            </p>
+
+            {selectedWebsite.criteria && (
+              <div className="criteria-grid">
+                {Object.entries(selectedWebsite.criteria).map(([key, value], index) => (
+                  <div 
+                    key={key} 
+                    className="criteria-item"
+                    ref={el => criteriaItemsRef.current[index] = el}
+                  >
+                    <h3 className="criteria-title">
+                      {getCriteriaIcon(key)}
+                      {key.charAt(0).toUpperCase() + key.slice(1)}
+                    </h3>
+                    <div className="criteria-rating">
+                      <span className="criteria-value">{value}</span>
+                      <span className="criteria-max">/5</span>
+                    </div>
+                    <div className="criteria-progress">
+                      <div 
+                        className="criteria-progress-bar" 
+                        style={{ width: `${(value / 5) * 100}%` }}
+                      ></div>
+                    </div>
+                    <p className="criteria-description">
+                      {getCriteriaDescription(key, value)}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
+            
+            <div className="action-buttons">
+              <a href="#/quiz" className="btn btn-primary">
+                Take the Quiz
+              </a>
+              <a href="#/whatnow" className="btn btn-secondary">
+                Learn More
+              </a>
+            </div>
+          </div>
+        )}
+        
+        {/* Call to Action Section */}
+        <div className="cta-section">
+          <h2 className="cta-title">Take Control of Your Digital Footprint</h2>
+          <p className="cta-description">
+            Learn more about how to protect your privacy and understand the terms you're agreeing to online.
+          </p>
+          <div className="cta-buttons">
+            <a href="#/quiz" className="btn btn-accent">
+              Take the Quiz
+            </a>
+            <a href="#/about" className="btn btn-secondary">
+              About the Project
+            </a>
+          </div>
+        </div>
+      </div>
+    </ErrorBoundary>
+  );
+}
+
+export default Home;

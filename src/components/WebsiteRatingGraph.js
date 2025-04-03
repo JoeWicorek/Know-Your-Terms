@@ -1,241 +1,164 @@
-import React, { useEffect, useState } from "react";
-import { Scatter } from "react-chartjs-2";
-import {
-  Chart,
-  ScatterController,
-  PointElement,
-  LinearScale,
-  Tooltip,
-  Legend,
-} from "chart.js";
+import React, { useState, useEffect } from 'react';
+import './WebsiteRatingGraph.css';
+import websiteData from '../data/websiteData';
 
-// Register Chart.js components
-Chart.register(ScatterController, PointElement, LinearScale, Tooltip, Legend);
+const WebsiteRatingGraph = () => {
+  const [selectedWebsite, setSelectedWebsite] = useState(null);
+  const [loadedImages, setLoadedImages] = useState({});
 
-// Completely reworked gradient bar plugin
-const gradientBarPlugin = {
-  id: "gradientBar",
-  beforeDatasetsDraw(chart) {
-    const { ctx, chartArea, scales } = chart;
-    if (!chartArea || !scales.x) return;
-    //console.log("Gradient plugin triggered!");
-    //console.log("Chart Area:", chartArea);
-    //console.log("Scales:", scales);
-
-    // Create gradient
-    const gradient = ctx.createLinearGradient(chartArea.left, 0, chartArea.right, 0);
-    gradient.addColorStop(0, "#98D8A1");    // Light green
-    gradient.addColorStop(0.25, "#B6E6AA"); // Green-yellow
-    gradient.addColorStop(0.5, "#FEDD8E");  // Yellow
-    gradient.addColorStop(0.75, "#FEB17E"); // Orange
-    gradient.addColorStop(1, "#FE8B7E");    // Light red
-
-    const yPos = chartArea.top + (chartArea.height / 2);
-    
-    ctx.save();
-    ctx.fillStyle = gradient;
-    const gradientHeight = 6;
-    ctx.fillRect(chartArea.left, yPos - (gradientHeight/2), chartArea.right - chartArea.left, gradientHeight);
-    ctx.restore();
-  }
-};
-
-Chart.register(gradientBarPlugin);
-
-const grades = ["A+", "A", "B+", "B", "B-", "C+", "C", "C-", "D+", "D", "D-", "E+", "F-"];
-const gradePositions = grades.reduce((acc, grade, index) => {
-  acc[grade] = index + 1;
-  return acc;
-}, {});
-
-// Preprocess images to ensure consistent size
-const preprocessImage = (img, targetSize = 96, highlight = false) => {
-  const canvas = document.createElement("canvas");
-  canvas.width = targetSize;
-  canvas.height = targetSize;
-  const ctx = canvas.getContext("2d");
-
-  ctx.clearRect(0, 0, targetSize, targetSize);
-
-  if (highlight) {
-    ctx.shadowBlur = 15;
-    ctx.shadowColor = "rgba(0, 123, 255, 0.6)";
-    ctx.beginPath();
-    ctx.arc(targetSize/2, targetSize/2, targetSize/2 - 5, 0, Math.PI * 2);
-    ctx.fillStyle = "rgba(0, 123, 255, 0.1)";
-    ctx.fill();
-  }
-
-  const scale = Math.min(targetSize / img.width, targetSize / img.height) * 0.85;
-  const scaledWidth = img.width * scale;
-  const scaledHeight = img.height * scale;
-
-  const xOffset = (targetSize - scaledWidth) / 2;
-  const yOffset = (targetSize - scaledHeight) / 2;
-
-  ctx.drawImage(img, xOffset, yOffset, scaledWidth, scaledHeight);
-  return canvas;
-};
-
-const WebsiteRatingGraph = ({ data, selectedWebsite }) => {
-  const [hoveredWebsite, setHoveredWebsite] = useState(null);
-  const [imageElements, setImageElements] = useState({});
-
+  // Load images on component mount
   useEffect(() => {
-    const loadImages = () => {
-      const loadedImages = {};
-      
-      data.forEach((website) => {
-        const img = new Image();
-        
-        img.onload = () => {
-          loadedImages[website.name] = img;
-          setImageElements(prev => ({...prev, [website.name]: img}));
-        };
-
-        img.src = `https://${website.domain}/favicon.ico`;
-
-        img.onerror = () => {
-          const fallbackImg = new Image();
-          fallbackImg.onload = () => {
-            loadedImages[website.name] = fallbackImg;
-            setImageElements(prev => ({...prev, [website.name]: fallbackImg}));
-          };
-          fallbackImg.onerror = () => {
-            console.warn(`Failed to load favicon for ${website.name}`);
-          };
-          fallbackImg.src = `https://www.google.com/s2/favicons?domain=${website.domain}`;
-        };
-      });
+    const loadImages = async () => {
+      const images = {};
+      for (const site of websiteData) {
+        try {
+          // Use the logo property directly from websiteData
+          images[site.name] = site.logo;
+        } catch (error) {
+          console.error(`Failed to load image for ${site.name}:`, error);
+        }
+      }
+      setLoadedImages(images);
     };
 
     loadImages();
-  }, [data]);
+  }, []);
 
-  const calculateYValue = (index, totalItems) => {
-    return index % 2 === 0 ? 0.6 : -0.6;
+  // Map ratings to positions on the y-axis (0-100%)
+  const getPositionForRating = (rating) => {
+    const ratingMap = {
+      'A+': 95, 'A': 90, 'A-': 85,
+      'B+': 80, 'B': 75, 'B-': 70,
+      'C+': 65, 'C': 60, 'C-': 55,
+      'D+': 50, 'D': 45, 'D-': 40,
+      'F+': 30, 'F': 20, 'F-': 10
+    };
+    return ratingMap[rating] || 50;
   };
 
-  const chartData = {
-    datasets: data.map((website, index) => ({
-      label: website.name,
-      data: [
-        {
-          x: gradePositions[website.rating],
-          y: calculateYValue(index, data.length),
-        },
-      ],
-      pointStyle: function(context) {
-        const img = imageElements[website.name];
-        const isHighlighted = hoveredWebsite === website.name || selectedWebsite?.name === website.name;
-        if (img) {
-          if (!img._processed) {
-            img._processed = {};
-          }
-          if (!img._processed[isHighlighted]) {
-            img._processed[isHighlighted] = preprocessImage(img, 96, isHighlighted);
-          }
-          return img._processed[isHighlighted];
-        }
-        return 'circle';
-      },
-      pointRadius: 45,
-      backgroundColor: 'transparent',
-      borderColor: selectedWebsite?.name === website.name ? "#007bff" : "rgba(0,0,0,0.2)",
-      borderWidth: selectedWebsite?.name === website.name ? 2 : 1,
-    })),
+  // Get color class based on rating
+  const getColorClassForRating = (rating) => {
+    if (rating.startsWith('A')) return 'grade-a';
+    if (rating.startsWith('B')) return 'grade-b';
+    if (rating.startsWith('C')) return 'grade-c';
+    if (rating.startsWith('D')) return 'grade-d';
+    return 'grade-f';
   };
 
-  const chartOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    layout: {
-      padding: {
-        left: 20,
-        right: 20,
-        top: 150,  // More space for search bar
-        bottom: 100
-      }
-    },
-    plugins: {
-      gradientBar: true,
-      legend: { display: false },
-      tooltip: {
-        enabled: true,
-        backgroundColor: 'rgba(255, 255, 255, 0.9)',
-        titleColor: '#000',
-        bodyColor: '#000',
-        borderColor: '#ddd',
-        borderWidth: 1,
-        padding: 10,
-        callbacks: {
-          // Modify the tooltip label
-          label: function(tooltipItem) {
-            const datasetIndex = tooltipItem.datasetIndex;
-            const index = tooltipItem.dataIndex;
-            const website = data[datasetIndex]; // Access the website data
-  
-            // Return the website's grade
-            return `${website.name}: Grade ${website.rating}`;
-          }
-        }
-      },
-    },
-    scales: {
-      x: {
-        min: 0.5,
-        max: grades.length + 0.5,
-        ticks: {
-          callback: (value) => grades[value - 1],
-          font: {
-            size: 13,
-            weight: "500",
-            family: "'Arial', sans-serif"
-          },
-          color: "#666",
-          padding: 5,
-        },
-        grid: {
-          display: false
-        },
-        border: {
-          display: false
-        },
-      },
-      y: {
-        min: -1,
-        max: 1,
-        grid: {
-          display: false
-        },
-        border: {
-          display: false
-        },
-        ticks: {
-          display: false
-        }
-      },
-    },
+  // Handle website dot click
+  const handleWebsiteClick = (website) => {
+    setSelectedWebsite(website === selectedWebsite ? null : website);
   };
 
   return (
-    <div style={{ 
-      width: "100%", 
-      height: "500px",
-      margin: "0 auto",
-      marginTop: "20px",
-      padding: "20px",
-      backgroundColor: "transparent",
-      position: "relative",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-    }}>
-      <Scatter 
-        data={chartData} 
-        options={chartOptions}
-        redraw={false}
-      />
+    <div className="graph-container">
+      <h2>Website Privacy Rating Graph</h2>
+      <p className="graph-description">
+        This graph shows how various popular websites rate in terms of their privacy policies and terms of service. 
+        Click on any website to see more details about their rating.
+      </p>
+      
+      <div className="graph">
+        <div className="grade-scale">
+          <span className="grade-marker" style={{ left: '10%' }}>F</span>
+          <span className="grade-marker" style={{ left: '30%' }}>D</span>
+          <span className="grade-marker" style={{ left: '50%' }}>C</span>
+          <span className="grade-marker" style={{ left: '70%' }}>B</span>
+          <span className="grade-marker" style={{ left: '90%' }}>A</span>
+        </div>
+        
+        <div className="websites-container">
+          {websiteData.map((website, index) => {
+            const xPosition = 10 + (index * (80 / (websiteData.length - 1 || 1)));
+            const yPosition = 100 - getPositionForRating(website.rating);
+            const colorClass = getColorClassForRating(website.rating);
+            
+            return (
+              <div
+                key={website.name}
+                className={`website-dot ${colorClass}`}
+                style={{
+                  left: `${xPosition}%`,
+                  top: `${yPosition}%`
+                }}
+                onClick={() => handleWebsiteClick(website)}
+              >
+                <div className="website-logo-container">
+                  {loadedImages[website.name] ? (
+                    <img 
+                      src={loadedImages[website.name]} 
+                      alt={`${website.name} logo`} 
+                      className="website-logo"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.style.display = 'none';
+                        e.target.nextSibling.style.display = 'flex';
+                      }}
+                    />
+                  ) : (
+                    <div className="website-fallback">
+                      {website.name.charAt(0).toUpperCase()}
+                    </div>
+                  )}
+                  <div 
+                    className="website-fallback" 
+                    style={{ display: 'none' }}
+                  >
+                    {website.name.charAt(0).toUpperCase()}
+                  </div>
+                </div>
+                <span className="website-label">{website.name}</span>
+              </div>
+            );
+          })}
+        </div>
+        
+        {selectedWebsite && (
+          <div className="website-tooltip">
+            <h3>{selectedWebsite.name}</h3>
+            <p>Website: <a href={selectedWebsite.url} target="_blank" rel="noopener noreferrer">{selectedWebsite.url.replace(/^https?:\/\//, '')}</a></p>
+            <div className={`grade-badge ${getColorClassForRating(selectedWebsite.rating)}`}>
+              Grade: {selectedWebsite.rating}
+            </div>
+            
+            <div className="criteria-list">
+              <h4>Rating Criteria:</h4>
+              <ul>
+                {Object.entries(selectedWebsite.criteria).map(([key, value]) => (
+                  <li key={key}><strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong> {value}/5</li>
+                ))}
+              </ul>
+            </div>
+            
+            <button className="view-details-btn" onClick={() => window.open(selectedWebsite.url, '_blank')}>
+              View Website
+            </button>
+          </div>
+        )}
+      </div>
+      
+      <div className="graph-legend">
+        <div className="legend-item">
+          <div className="legend-color grade-a"></div>
+          <span>A: Excellent</span>
+        </div>
+        <div className="legend-item">
+          <div className="legend-color grade-b"></div>
+          <span>B: Good</span>
+        </div>
+        <div className="legend-item">
+          <div className="legend-color grade-c"></div>
+          <span>C: Average</span>
+        </div>
+        <div className="legend-item">
+          <div className="legend-color grade-d"></div>
+          <span>D: Poor</span>
+        </div>
+        <div className="legend-item">
+          <div className="legend-color grade-f"></div>
+          <span>F: Very Poor</span>
+        </div>
+      </div>
     </div>
   );
 };

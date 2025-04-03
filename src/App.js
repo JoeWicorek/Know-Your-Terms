@@ -1,25 +1,34 @@
 import React from 'react';
-import './App.css';  // Import global styles here
-import { HashRouter as Router, Route, Routes } from 'react-router-dom';
-import Nav from './components/Nav';  // Use Nav instead of Navbar
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import './App.css';
+import Nav from './components/Nav';  
 import Home from './components/Home';
-import Quiz from './components/Quiz';
-import WhatNow from './components/WhatNow';
 import About from './components/About';
-
+import QuizPage from './components/QuizPage';  
+import PrivacyChallenge from './components/PrivacyChallenge';
+import DigitalRightsAssessment from './components/DigitalRightsAssessment';
+import TermsOfServiceQuiz from './components/TermsOfServiceQuiz';
+import WhatNow from './components/WhatNow';
 
 function App() {
-    return (
-        <Router>
-                <Nav /> {/* Render Nav here */}
-                <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/about" element={<About />} />
-                    <Route path="/quiz" element={<Quiz/>} />
-                    <Route path="/whatnow" element={<WhatNow />} />
-                </Routes>
-        </Router>
-    );
+  return (
+    <Router>
+      <div className="App">
+        <Nav />
+        <div className="content">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/quiz" element={<QuizPage />} />
+            <Route path="/privacy-challenge" element={<PrivacyChallenge />} />
+            <Route path="/digital-rights-assessment" element={<DigitalRightsAssessment />} />
+            <Route path="/terms-quiz" element={<TermsOfServiceQuiz />} />
+            <Route path="/whatnow" element={<WhatNow />} />
+          </Routes>
+        </div>
+      </div>
+    </Router>
+  );
 }
 
 export default App;

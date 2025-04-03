@@ -1,150 +1,55 @@
-import React, { useState } from 'react';
-import './DigitalFootprintQuiz.css';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import './Quiz.css';
+import { FaShieldAlt, FaGavel, FaFileContract } from 'react-icons/fa';
 
-function TermsOfServiceQuiz() {
-    const [answers, setAnswers] = useState({});
-    const [percentage, setPercentage] = useState(null);
-
-    // Platform data categorized
-    const platforms = {
-        "Popular Social Platforms": {
-            Meta: {
-                clarity: 3,
-                transparency: 3,
-                fairness: 4,
-                accessibility: 2,
-                accountability: 4,
-            },
-            TikTok: {
-                clarity: 3,
-                transparency: 3,
-                fairness: 4,
-                accessibility: 3,
-                accountability: 4,
-            },
-            Pinterest: {
-                clarity: 2,
-                transparency: 3,
-                fairness: 3,
-                accessibility: 2,
-                accountability: 2,
-            },
-        },
-        "Other Platforms": {
-            ChatGPT: {
-                clarity: 2,
-                transparency: 2,
-                fairness: 3,
-                accessibility: 2,
-                accountability: 3,
-            },
-            Instagram: {
-                clarity: 2,
-                transparency: 3,
-                fairness: 3,
-                accessibility: 2,
-                accountability: 4,
-            },
-            Gmail: {
-                clarity: 2,
-                transparency: 3,
-                fairness: 3,
-                accessibility: 2,
-                accountability: 3,
-            },
-            Flo: {
-                clarity: 3,
-                transparency: 3,
-                fairness: 3,
-                accessibility: 3,
-                accountability: 3,
-            },
-        },
-    };
-
-    const handleChange = (event) => {
-        const { name, checked } = event.target;
-        setAnswers({ ...answers, [name]: checked });
-    };
-
-    const calculatePercentage = () => {
-        const maxScore = 25; // 5 criteria, each with max score of 5
-        const minScore = 5; // 5 criteria, each with min score of 1
-
-        let totalPercentage = 0;
-        let selectedPlatforms = 0;
-
-        Object.keys(answers).forEach((platform) => {
-            if (answers[platform]) {
-                selectedPlatforms++;
-                const { clarity, transparency, fairness, accessibility, accountability } = Object.values(platforms)
-                    .flatMap((category) => Object.entries(category))
-                    .find(([key]) => key === platform)[1];
-
-                const actualScore = clarity + transparency + fairness + accessibility + accountability;
-                const platformPercentage = ((maxScore - actualScore) / (maxScore - minScore)) * 100;
-                totalPercentage += platformPercentage;
-            }
-        });
-
-        setPercentage(selectedPlatforms ? totalPercentage / selectedPlatforms : 0);
-    };
-
-    const getGrade = () => {
-        if (percentage === null) return '';
-        if (percentage >= 90) return 'A';
-        if (percentage >= 80) return 'B';
-        if (percentage >= 70) return 'C';
-        if (percentage >= 60) return 'D';
-        return 'F';
-    };
-
-    return (
-        <div className="flex">
-            <div className="quiz-container">
-                <h2 className="quiz-title">Terms of Service: Platform Evaluation</h2>
-                <p className="quiz-description">Select the platforms you want to evaluate based on their terms of service.</p>
-
-                {/* Render categorized platform options */}
-                {Object.entries(platforms).map(([category, platforms]) => (
-                    <div key={category} className="quiz-group">
-                        <h3 className="quiz-group-title">{category}</h3>
-                        <div className="quiz-options">
-                            {Object.keys(platforms).map((platform) => (
-                                <div key={platform} className="quiz-option">
-                                    <label className="quiz-label">
-                                        <input
-                                            type="checkbox"
-                                            name={platform}
-                                            checked={!!answers[platform]}
-                                            onChange={handleChange}
-                                            className="quiz-checkbox"
-                                        />
-                                        {platform}
-                                    </label>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                ))}
-
-                <button onClick={calculatePercentage} className="quiz-button">
-                    Get Your Evaluation Percentage
-                </button>
-
-                {percentage !== null && (
-                    <div className="quiz-result">
-                        <h3>Your Average Percentage: <span className="percentage">{percentage.toFixed(2)}%</span></h3>
-                        <p>Your overall grade: <strong className="grade">{getGrade()}</strong></p>
-                    </div>
-                )}
-            </div>
-
-            <footer className="footer">
-                <h2 className="title">WHAT ARE YOU REALLY AGREEING TO?</h2>
-            </footer>
+const Quiz = () => {
+  return (
+    <div className="page-wrapper">
+      <div className="quiz-container">
+        <h1>Knowledge Quizzes</h1>
+        
+        <div className="quiz-description">
+          <p>Test your understanding of digital rights, privacy policies, and terms of service with our interactive quizzes. Each quiz is designed to help you learn more about how your data is used online and what rights you have as a user.</p>
         </div>
-    );
-}
 
-export default TermsOfServiceQuiz;
+        <div className="quiz-options-grid">
+          <Link to="/privacy-challenge" className="quiz-option-card">
+            <div className="option-icon">
+              <FaShieldAlt size={30} />
+            </div>
+            <div className="option-content">
+              <h3>Privacy Policy Challenge</h3>
+              <p>Test your knowledge of privacy policies and learn how to identify concerning clauses that may affect your data privacy.</p>
+              <span className="option-cta">Start Quiz &rarr;</span>
+            </div>
+          </Link>
+
+          <Link to="/digital-rights-assessment" className="quiz-option-card">
+            <div className="option-icon">
+              <FaGavel size={30} />
+            </div>
+            <div className="option-content">
+              <h3>Digital Rights Assessment</h3>
+              <p>Evaluate your understanding of digital rights and learn how to protect yourself online.</p>
+              <span className="option-cta">Start Quiz &rarr;</span>
+            </div>
+          </Link>
+
+          <Link to="/terms-quiz" className="quiz-option-card">
+            <div className="option-icon">
+              <FaFileContract size={30} />
+            </div>
+            <div className="option-content">
+              <h3>Terms of Service Quiz</h3>
+              <p>Challenge yourself to understand the common terms and conditions you agree to when using online services.</p>
+              <span className="option-cta">Start Quiz &rarr;</span>
+            </div>
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Quiz;
