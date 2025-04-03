@@ -4,7 +4,7 @@
 **"Know Your Terms"** helps users better understand digital agreements by analyzing website Terms of Service (ToS). Our platform provides clarity, transparency, and insights into how websites collect, use, and share personal data.
 
 ## 🚀 Live Demo
-Visit the live application at [know-your-terms.netlify.app](https://know-your-terms.netlify.app)
+Visit the live application at https://know-your-terms.netlify.app/ 
 
 ---
 
