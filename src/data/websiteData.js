@@ -20,7 +20,7 @@ const websiteData = [
     id: 2,
     name: 'Google',
     url: 'https://www.google.com',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/1200px-Google_%22G%22_Logo.svg.png',
+    logo: 'https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-suite-everything-you-need-know-about-google-newest-0.png',
     rating: 'C',
     overallScore: 2.2,
     categories: ['Search Engine', 'Advertising'],
@@ -54,7 +54,7 @@ const websiteData = [
     id: 4,
     name: 'Amazon',
     url: 'https://www.amazon.com',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/1200px-Amazon_logo.svg.png',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Amazon_icon.svg/2500px-Amazon_icon.svg.png',
     rating: 'C',
     overallScore: 2.4,
     categories: ['E-commerce', 'Cloud Services'],
@@ -105,7 +105,7 @@ const websiteData = [
     id: 7,
     name: 'Netflix',
     url: 'https://www.netflix.com',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Netflix_2015_logo.svg/1200px-Netflix_2015_logo.svg.png',
+    logo: 'https://assets.nflxext.com/us/ffe/siteui/common/icons/nficon2016.png',
     rating: 'B',
     overallScore: 3.0,
     categories: ['Streaming', 'Entertainment'],
@@ -156,7 +156,7 @@ const websiteData = [
     id: 10,
     name: 'TikTok',
     url: 'https://www.tiktok.com',
-    logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/a/a9/TikTok_logo.svg/1200px-TikTok_logo.svg.png',
+    logo: 'https://sf-tb-sg.ibytedtos.com/obj/eden-sg/uhtyvueh7nulogpoguhm/tiktok-icon2.png',
     rating: 'F',
     overallScore: 1.2,
     categories: ['Social Media', 'Video Sharing'],
@@ -167,6 +167,23 @@ const websiteData = [
       fairness: 1,
       accessibility: 2,
       accountability: 1
+    }
+  },
+  {
+    id: 11,
+    name: 'Reddit',
+    url: 'https://www.reddit.com',
+    logo: 'https://cdn-icons-png.flaticon.com/512/1384/1384876.png',
+    rating: 'C',
+    overallScore: 2.4,
+    categories: ['Social Media', 'Forum'],
+    description: 'Reddit\'s Terms of Service are relatively straightforward but still grant the platform broad rights to user content and data.',
+    criteria: {
+      clarity: 3,
+      transparency: 2,
+      fairness: 2,
+      accessibility: 3,
+      accountability: 2
     }
   }
 ];

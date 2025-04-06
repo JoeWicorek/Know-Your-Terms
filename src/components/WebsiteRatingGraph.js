@@ -5,20 +5,24 @@ import websiteData from '../data/websiteData';
 const WebsiteRatingGraph = () => {
   const [selectedWebsite, setSelectedWebsite] = useState(null);
   const [loadedImages, setLoadedImages] = useState({});
+  const [failedImages, setFailedImages] = useState({});
 
   // Load images on component mount
   useEffect(() => {
     const loadImages = async () => {
       const images = {};
+      const failed = {};
       for (const site of websiteData) {
         try {
           // Use the logo property directly from websiteData
-          images[site.name] = site.logo;
+          images[site.id] = site.logo;
         } catch (error) {
           console.error(`Failed to load image for ${site.name}:`, error);
+          failed[site.id] = true;
         }
       }
       setLoadedImages(images);
+      setFailedImages(failed);
     };
 
     loadImages();
@@ -50,6 +54,14 @@ const WebsiteRatingGraph = () => {
     setSelectedWebsite(website === selectedWebsite ? null : website);
   };
 
+  // Handle image error
+  const handleImageError = (websiteId) => {
+    setFailedImages(prev => ({
+      ...prev,
+      [websiteId]: true
+    }));
+  };
+
   return (
     <div className="graph-container">
       <h2>Website Privacy Rating Graph</h2>
@@ -72,10 +84,11 @@ const WebsiteRatingGraph = () => {
             const xPosition = 10 + (index * (80 / (websiteData.length - 1 || 1)));
             const yPosition = 100 - getPositionForRating(website.rating);
             const colorClass = getColorClassForRating(website.rating);
+            const showFallback = failedImages[website.id];
             
             return (
               <div
-                key={website.name}
+                key={website.id}
                 className={`website-dot ${colorClass}`}
                 style={{
                   left: `${xPosition}%`,
@@ -83,30 +96,18 @@ const WebsiteRatingGraph = () => {
                 }}
                 onClick={() => handleWebsiteClick(website)}
               >
-                <div className="website-logo-container">
-                  {loadedImages[website.name] ? (
-                    <img 
-                      src={loadedImages[website.name]} 
-                      alt={`${website.name} logo`} 
-                      className="website-logo"
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.style.display = 'none';
-                        e.target.nextSibling.style.display = 'flex';
-                      }}
-                    />
-                  ) : (
-                    <div className="website-fallback">
-                      {website.name.charAt(0).toUpperCase()}
-                    </div>
-                  )}
-                  <div 
-                    className="website-fallback" 
-                    style={{ display: 'none' }}
-                  >
+                {!showFallback ? (
+                  <img 
+                    src={loadedImages[website.id]} 
+                    alt={`${website.name} logo`} 
+                    className="website-logo"
+                    onError={() => handleImageError(website.id)}
+                  />
+                ) : (
+                  <div className="website-fallback">
                     {website.name.charAt(0).toUpperCase()}
                   </div>
-                </div>
+                )}
                 <span className="website-label">{website.name}</span>
               </div>
             );
@@ -115,6 +116,13 @@ const WebsiteRatingGraph = () => {
         
         {selectedWebsite && (
           <div className="website-tooltip">
+            <button 
+              className="close-tooltip-btn" 
+              onClick={() => setSelectedWebsite(null)}
+              aria-label="Close"
+            >
+              ×
+            </button>
             <h3>{selectedWebsite.name}</h3>
             <p>Website: <a href={selectedWebsite.url} target="_blank" rel="noopener noreferrer">{selectedWebsite.url.replace(/^https?:\/\//, '')}</a></p>
             <div className={`grade-badge ${getColorClassForRating(selectedWebsite.rating)}`}>

@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import './Home.css';
 import './WebsiteCards.css';
 import WebsiteRatingGraph from './WebsiteRatingGraph';
-import { FaSearch, FaGlobe, FaShieldAlt, FaFileAlt, FaUserLock, FaAccessibleIcon, FaBalanceScale } from 'react-icons/fa';
+import SearchBar from './SearchBar';
+import { FaGlobe, FaShieldAlt, FaFileAlt, FaUserLock, FaAccessibleIcon, FaBalanceScale } from 'react-icons/fa';
 
 // Sample website data
 const websiteData = [
@@ -180,6 +181,23 @@ const websiteData = [
   },
   {
     id: 11,
+    name: 'Reddit',
+    url: 'https://www.reddit.com',
+    logo: 'https://cdn-icons-png.flaticon.com/512/1384/1384876.png',
+    rating: 'C',
+    overallScore: 2.4,
+    categories: ['Social Media', 'Forum'],
+    description: 'Reddit\'s Terms of Service are relatively straightforward but still grant the platform broad rights to user content and data.',
+    criteria: {
+      clarity: 3,
+      transparency: 2,
+      fairness: 2,
+      accessibility: 3,
+      accountability: 2
+    }
+  },
+  {
+    id: 12,
     name: 'LinkedIn',
     url: 'https://www.linkedin.com',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/LinkedIn_logo_initials.png/1200px-LinkedIn_logo_initials.png',
@@ -194,35 +212,70 @@ const websiteData = [
       accessibility: 3,
       accountability: 2
     }
-  },
-  {
-    id: 12,
-    name: 'Reddit',
-    url: 'https://www.reddit.com',
-    logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/5/58/Reddit_logo_new.svg/1200px-Reddit_logo_new.svg.png',
-    rating: 'C',
-    overallScore: 2.4,
-    categories: ['Social Media', 'Forum'],
-    description: 'Reddit\'s Terms of Service are relatively straightforward but still grant the platform broad rights to user content and data.',
-    criteria: {
-      clarity: 3,
-      transparency: 2,
-      fairness: 2,
-      accessibility: 3,
-      accountability: 2
-    }
   }
 ];
 
 function Home() {
-  const [searchTerm, setSearchTerm] = useState('');
   const [filteredWebsites, setFilteredWebsites] = useState(websiteData);
   const [selectedWebsite, setSelectedWebsite] = useState(null);
   const [animateIn, setAnimateIn] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
+  const [noResults, setNoResults] = useState(false);
   
   const websiteCardsRef = useRef([]);
   const criteriaItemsRef = useRef([]);
-  
+
+  // Handle search from SearchBar component
+  const handleSearch = (searchTerm) => {
+    setIsSearching(true);
+    
+    // Scroll to results section
+    setTimeout(() => {
+      const websitesSection = document.querySelector('.websites-section');
+      if (websitesSection) {
+        websitesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
+    
+    setTimeout(() => {
+      if (!searchTerm || searchTerm.trim() === '') {
+        setFilteredWebsites(websiteData);
+        setNoResults(false);
+        setIsSearching(false);
+        return;
+      }
+      
+      const searchTermLower = searchTerm.toLowerCase();
+      
+      // Filter websites based on search term
+      const filtered = websiteData.filter(website => 
+        website.name.toLowerCase().includes(searchTermLower) ||
+        (website.url && website.url.toLowerCase().includes(searchTermLower)) ||
+        (website.categories && website.categories.some(category => 
+          category.toLowerCase().includes(searchTermLower)
+        )) ||
+        (website.description && website.description.toLowerCase().includes(searchTermLower))
+      );
+      
+      setFilteredWebsites(filtered);
+      setNoResults(filtered.length === 0);
+      setIsSearching(false);
+    }, 600); // Longer delay to show loading state
+  };
+
+  // Handle website selection
+  const handleWebsiteSelect = (website) => {
+    setSelectedWebsite(website);
+    
+    // Scroll to selected website details
+    setTimeout(() => {
+      const selectedWebsiteElement = document.querySelector('.selected-website');
+      if (selectedWebsiteElement) {
+        selectedWebsiteElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
+  };
+
   // Animation on mount
   useEffect(() => {
     setAnimateIn(true);
@@ -255,43 +308,17 @@ function Home() {
     }
   }, [selectedWebsite]);
 
-  // Handle search
-  const handleSearch = () => {
-    if (searchTerm.trim() === '') {
-      setFilteredWebsites(websiteData);
-      return;
-    }
+  // Close suggestions when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // Close suggestions when clicking outside
+    };
     
-    const filtered = websiteData.filter(website => 
-      website.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (website.url && website.url.toLowerCase().includes(searchTerm.toLowerCase())) ||
-      (website.categories && website.categories.some(category => 
-        category.toLowerCase().includes(searchTerm.toLowerCase())
-      ))
-    );
-    
-    setFilteredWebsites(filtered);
-  };
-
-  // Handle key press for search
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      handleSearch();
-    }
-  };
-
-  // Handle website selection
-  const handleWebsiteSelect = (website) => {
-    setSelectedWebsite(website);
-    
-    // Scroll to selected website details
-    setTimeout(() => {
-      const selectedWebsiteElement = document.querySelector('.selected-website');
-      if (selectedWebsiteElement) {
-        selectedWebsiteElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }, 100);
-  };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   // Get logo URL with fallback
   const getLogoUrl = (website) => {
@@ -472,31 +499,29 @@ function Home() {
           Understand what you're agreeing to when you click "I Accept" on Terms of Service agreements
         </p>
         
-        {/* Prominent Search Bar */}
+        {/* New Search Bar Component */}
         <div className="hero-search">
-          <div className="search-container">
-            <input
-              type="text"
-              className="search-input"
-              placeholder="Search for a website or app..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              onKeyPress={handleKeyPress}
-            />
-            <button className="search-button" onClick={handleSearch}>
-              <FaSearch className="search-icon" />
-              Search
-            </button>
-          </div>
+          <SearchBar onSearch={handleSearch} websiteData={websiteData} />
+          
+          {/* Search Results Info */}
+          {isSearching ? (
+            <div className="search-results-info">
+              <span>Searching...</span>
+            </div>
+          ) : filteredWebsites.length !== websiteData.length && filteredWebsites.length > 0 ? (
+            <div className="search-results-info">
+              <span>Found {filteredWebsites.length} result{filteredWebsites.length !== 1 ? 's' : ''}</span>
+            </div>
+          ) : null}
         </div>
         
         <div className="hero-cta">
           <button 
-            className="btn btn-accent"
+            className="btn btn-primary animated-button"
             onClick={() => {
               const ratingSection = document.getElementById('rating-graph-section');
               if (ratingSection) {
-                ratingSection.scrollIntoView({ behavior: 'smooth' });
+                ratingSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
               }
             }}
           >
@@ -517,163 +542,142 @@ function Home() {
       </div>
 
       {/* Popular Websites Section with Better Image Handling */}
-      <div className="popular-websites-section">
-        <h2 className="section-title">Popular Websites</h2>
-        <p className="section-description">
-          Click on any website to see detailed ratings and analysis of their Terms of Service.
+      <div className="websites-section">
+        <h2 className="website-ratings-title">
+          {filteredWebsites.length !== websiteData.length && filteredWebsites.length > 0 
+            ? `Search Results (${filteredWebsites.length})` 
+            : 'Website Ratings'}
+        </h2>
+        <p className="website-ratings-subtitle">
+          Browse through our database of websites and their Terms of Service ratings
         </p>
-        
         <div className="websites-grid">
-          {filteredWebsites && filteredWebsites.length > 0 ? (
-            filteredWebsites.slice(0, 12).map((website, index) => (
-              <div
-                key={website.id}
-                className="website-card"
-                onClick={() => handleWebsiteSelect(website)}
-                style={{ '--animation-delay': index }}
-              >
-                <div className="website-card-content">
-                  <div className="website-logo-container" data-initial={website.name ? website.name.charAt(0).toUpperCase() : 'W'}>
-                    {getLogoUrl(website) ? (
-                      <img 
-                        src={getLogoUrl(website)} 
-                        alt={`${website.name} logo`} 
-                        className="website-logo"
-                        onError={(e) => handleImageError(e, website.name)}
-                        data-initial={website.name.charAt(0).toUpperCase()}
-                        loading="lazy"
-                        crossOrigin="anonymous"
-                      />
-                    ) : (
-                      <div className="website-logo-fallback" data-initial={website.name.charAt(0).toUpperCase()}></div>
-                    )}
-                  </div>
-                  <div className="website-card-info">
-                    <h3 className="website-name">{website.name}</h3>
-                    <div className={`rating-badge ${getGradeClass(website.overallScore)}`}>
-                      {website.rating}
-                    </div>
-                  </div>
+          {filteredWebsites.map((website, index) => (
+            <div 
+              key={website.id} 
+              className="website-card"
+              style={{ '--animation-delay': index }}
+              onClick={() => handleWebsiteSelect(website)}
+            >
+              <div className="website-card-content">
+                <div 
+                  className="website-logo-container"
+                  data-initial={website.name.charAt(0).toUpperCase()}
+                >
+                  <img 
+                    src={getLogoUrl(website)}
+                    alt={`${website.name} logo`}
+                    className="website-logo"
+                    onError={(e) => handleImageError(e, website.name)}
+                  />
                 </div>
-                <div className="website-card-overlay">
-                  <span>View Details</span>
+                <div className="website-card-info">
+                  <h3 className="website-name">{website.name}</h3>
+                  <span className={`rating-badge grade-${website.rating.toLowerCase().charAt(0)}`}>
+                    {website.rating}
+                  </span>
                 </div>
               </div>
-            ))
-          ) : (
+            </div>
+          ))}
+          
+          {filteredWebsites.length === 0 && (
             <div className="no-results">
-              <p>No websites found matching your search criteria.</p>
+              <p>No websites match your search criteria.</p>
+              <button 
+                className="btn btn-secondary"
+                onClick={() => {
+                  setFilteredWebsites(websiteData);
+                  setNoResults(false);
+                }}
+              >
+                Show All Websites
+              </button>
             </div>
           )}
         </div>
-        
-        {filteredWebsites && filteredWebsites.length > 12 && (
-          <div className="view-more-container">
-            <button 
-              className="btn btn-secondary"
-              onClick={() => {
-                // Show all websites
-                setFilteredWebsites(websiteData);
-              }}
-            >
-              View More Websites
-            </button>
-          </div>
-        )}
       </div>
 
       {/* Selected Website Information */}
       {selectedWebsite && (
         <div className="selected-website">
           <div className="selected-website-header">
-            <div className="selected-website-logo-container" data-initial={selectedWebsite.name ? selectedWebsite.name.charAt(0).toUpperCase() : 'W'}>
-              <img
+            <div 
+              className="selected-website-logo-container"
+              data-initial={selectedWebsite.name.charAt(0).toUpperCase()}
+            >
+              <img 
                 src={getLogoUrl(selectedWebsite)}
-                alt={`${selectedWebsite.name || 'Website'} logo`}
+                alt={`${selectedWebsite.name} logo`}
                 className="selected-website-logo"
-                width="120"
-                height="120"
-                loading="lazy"
                 onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.style.opacity = "0";
+                  e.target.style.display = 'none';
+                  e.target.parentNode.classList.add('show-fallback');
                 }}
               />
             </div>
             <div className="selected-website-info">
-              <h2 className="selected-website-name">{selectedWebsite.name || 'Unknown Website'}</h2>
-              {selectedWebsite.url && (
-                <a href={selectedWebsite.url} className="selected-website-url" target="_blank" rel="noopener noreferrer">
-                  <FaGlobe /> {selectedWebsite.url}
-                </a>
-              )}
-              <div className="website-tags">
-                {selectedWebsite.categories && Array.isArray(selectedWebsite.categories) 
-                  ? selectedWebsite.categories.map((category, idx) => (
-                      <span key={idx} className="website-tag" style={{ '--animation-delay': idx * 0.1 }}>
-                        {category}
-                      </span>
-                    ))
-                  : <span className="website-tag">General</span>
-                }
+              <h2 className="selected-website-name">{selectedWebsite.name}</h2>
+              <a href={selectedWebsite.url} target="_blank" rel="noopener noreferrer" className="selected-website-url">
+                {selectedWebsite.url.replace(/^https?:\/\//, '')}
+              </a>
+              <div className="selected-website-categories">
+                {selectedWebsite.categories.map((category, index) => (
+                  <span key={index} className="category-tag">{category}</span>
+                ))}
               </div>
             </div>
-          </div>
-
-          <p className="selected-website-description">
-            {selectedWebsite.description || 'No description available for this website.'}
-          </p>
-
-          {selectedWebsite.criteria && (
-            <div className="criteria-grid">
-              {Object.entries(selectedWebsite.criteria).map(([key, value], index) => (
-                <div 
-                  key={key} 
-                  className="criteria-item"
-                  ref={el => criteriaItemsRef.current[index] = el}
-                  style={{ '--animation-delay': index * 0.1 }}
-                >
-                  <h3 className="criteria-title">
-                    {getCriteriaIcon(key)}
-                    {key.charAt(0).toUpperCase() + key.slice(1)}
-                  </h3>
-                  <div className="criteria-rating">
-                    <span className="criteria-value">{value}</span>
-                    <span className="criteria-max">/5</span>
-                  </div>
-                  <div className="criteria-progress">
-                    <div 
-                      className="criteria-progress-bar" 
-                      style={{ width: `${(value / 5) * 100}%` }}
-                    ></div>
-                  </div>
-                  <p className="criteria-description">
-                    {getCriteriaDescription(key, value)}
-                  </p>
-                </div>
-              ))}
+            <div className={`selected-website-grade ${getGradeClass(selectedWebsite.overallScore)}`}>
+              {selectedWebsite.rating}
             </div>
-          )}
+          </div>
           
-          <div className="action-buttons">
-            <Link to="/quiz" className="btn btn-primary">
-              Explore Quizzes
-            </Link>
-            <Link to="/whatnow" className="btn btn-secondary">
-              Learn More
-            </Link>
+          <p className="selected-website-description">
+            {selectedWebsite.description}
+          </p>
+          
+          <div className="criteria-grid">
+            {Object.entries(selectedWebsite.criteria).map(([key, value]) => (
+              <div 
+                key={key} 
+                className="criteria-item"
+                ref={el => {
+                  if (el && !criteriaItemsRef.current.includes(el)) {
+                    criteriaItemsRef.current.push(el);
+                  }
+                }}
+              >
+                <h3 className="criteria-title">
+                  {getCriteriaIcon(key)}
+                  {key.charAt(0).toUpperCase() + key.slice(1)}
+                </h3>
+                <div className="criteria-rating">
+                  <span className="criteria-value">{value}</span>
+                  <span className="criteria-max">/5</span>
+                </div>
+                <div className="criteria-progress">
+                  <div 
+                    className="criteria-progress-bar" 
+                    style={{ width: `${(value / 5) * 100}%` }}
+                  ></div>
+                </div>
+                <p className="criteria-description">
+                  {getCriteriaDescription(key, value)}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       )}
       
       {/* Call to Action Section */}
       <div className="cta-section">
-        <h2 className="cta-title">Take Control of Your Digital Footprint</h2>
+        <h2 className="cta-title">Take Control of Your <span className="orange-accent">Digital Footprint</span></h2>
         <p className="cta-description">
           Learn more about how to protect your privacy and understand the terms you're agreeing to online.
         </p>
         <div className="quiz-cards-container">
-          <Link to="/quiz" className="quiz-card main-quiz-card">
+          <Link to="/quizzes" className="quiz-card main-quiz-card">
             <div className="quiz-card-icon">
               <FaShieldAlt />
             </div>
@@ -685,7 +689,7 @@ function Home() {
           </Link>
           
           <div className="quiz-cards-grid">
-            <Link to="/privacy-challenge" className="quiz-card">
+            <Link to="/quizzes/privacy-policy-challenge" className="quiz-card">
               <div className="quiz-card-icon">
                 <FaUserLock />
               </div>
@@ -696,7 +700,7 @@ function Home() {
               </div>
             </Link>
             
-            <Link to="/digital-rights-assessment" className="quiz-card">
+            <Link to="/quizzes/digital-rights-assessment" className="quiz-card">
               <div className="quiz-card-icon">
                 <FaShieldAlt />
               </div>
@@ -707,7 +711,7 @@ function Home() {
               </div>
             </Link>
             
-            <Link to="/terms-quiz" className="quiz-card">
+            <Link to="/quizzes/terms-of-service-quiz" className="quiz-card">
               <div className="quiz-card-icon">
                 <FaFileAlt />
               </div>

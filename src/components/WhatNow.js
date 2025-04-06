@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import './WhatNow.css'; // Updated custom styles
+import './WhatNow.css'; 
 import { FaArrowRight, FaArrowLeft, FaShieldAlt, FaUserSecret, FaBook, FaLock, FaGlobe, FaMobileAlt } from 'react-icons/fa';
 
 function WhatNow() {
@@ -19,7 +19,6 @@ function WhatNow() {
         dots: true,
         infinite: true,
         speed: 500,
-        slidesToShow: 1,
         slidesToScroll: 1,
         centerMode: true,
         centerPadding: '0px',

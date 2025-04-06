@@ -1,22 +1,23 @@
 .graph-container {
-  background-color: var(--dark-card, #1f1f3a);
-  border-radius: 15px;
+  background-color: #1a2a35;
+  border-radius: 12px;
   padding: 30px;
-  margin-bottom: 40px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  margin: 30px auto;
+  max-width: 1200px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .graph-container h2 {
   text-align: center;
+  color: #ecf0f1;
   margin-bottom: 15px;
-  color: var(--text-light, #f5f5f5);
   font-size: 1.8rem;
 }
 
 .graph-description {
   text-align: center;
+  color: #b3c1d1;
   margin-bottom: 30px;
-  color: var(--text-light-secondary, #b8b8d4);
   max-width: 800px;
   margin-left: auto;
   margin-right: auto;
@@ -24,28 +25,40 @@
 
 .graph {
   position: relative;
-  height: 300px;
-  background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 10px;
-  margin-bottom: 20px;
-  padding: 20px;
+  height: 400px;
+  background: linear-gradient(to right, 
+    rgba(231, 76, 60, 0.2) 0%, 
+    rgba(230, 126, 34, 0.2) 20%, 
+    rgba(241, 196, 15, 0.2) 40%, 
+    rgba(46, 204, 113, 0.2) 60%, 
+    rgba(52, 152, 219, 0.2) 80%
+  );
+  border-radius: 8px;
+  margin-bottom: 30px;
+  overflow: hidden;
 }
 
 .grade-scale {
   position: absolute;
-  top: 10px;
+  bottom: 10px;
   left: 0;
   right: 0;
-  height: 20px;
-  display: flex;
-  justify-content: space-between;
+  height: 4px;
+  background: linear-gradient(to right, 
+    #e74c3c 0%, 
+    #e67e22 20%, 
+    #f1c40f 40%, 
+    #2ecc71 60%, 
+    #3498db 80%
+  );
 }
 
 .grade-marker {
   position: absolute;
-  font-size: 0.8rem;
-  color: var(--text-light-secondary, #b8b8d4);
+  bottom: 10px;
   transform: translateX(-50%);
+  color: #ecf0f1;
+  font-weight: bold;
 }
 
 .websites-container {
@@ -56,54 +69,44 @@
 
 .website-dot {
   position: absolute;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  transform: translate(-50%, -50%);
-  z-index: 1;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-}
-
-.website-dot:hover {
-  transform: translate(-50%, -50%) scale(1.2);
-  z-index: 2;
-  border-color: rgba(255, 255, 255, 0.5);
-}
-
-.website-logo-container {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  overflow: hidden;
   background-color: white;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  z-index: 1;
+}
+
+.website-dot:hover {
+  transform: translate(-50%, -50%) scale(1.15);
+  z-index: 2;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 .website-logo {
-  width: 100%;
-  height: 100%;
+  width: 70%;
+  height: 70%;
   object-fit: contain;
-  padding: 2px;
+  border-radius: 50%;
 }
 
 .website-fallback {
   width: 100%;
   height: 100%;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 1.5rem;
   font-weight: bold;
-  color: #333;
-  background-color: #f5f5f5;
-  font-size: 24px;
+  color: white;
+  background-color: #2980b9;
 }
 
 .website-label {
@@ -112,64 +115,112 @@
   left: 50%;
   transform: translateX(-50%);
   white-space: nowrap;
+  color: #ecf0f1;
   font-size: 0.8rem;
-  color: var(--text-light, #f5f5f5);
   opacity: 0;
-  transition: opacity 0.2s ease;
-  background-color: rgba(0, 0, 0, 0.5);
-  padding: 2px 6px;
-  border-radius: 3px;
+  transition: opacity 0.3s ease;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
 }
 
 .website-dot:hover .website-label {
   opacity: 1;
 }
 
+.grade-a {
+  border: 2px solid #27ae60;
+}
+
+.grade-b {
+  border: 2px solid #2980b9;
+}
+
+.grade-c {
+  border: 2px solid #f39c12;
+}
+
+.grade-d {
+  border: 2px solid #e67e22;
+}
+
+.grade-f {
+  border: 2px solid #e74c3c;
+}
+
 .website-tooltip {
   position: absolute;
-  bottom: 10px;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
-  background-color: var(--dark-card, #1f1f3a);
-  border-radius: 8px;
-  padding: 15px;
-  width: 280px;
+  transform: translate(-50%, -50%);
+  background-color: #2c3e50;
+  padding: 20px;
+  border-radius: 10px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  width: 300px;
+  max-width: 90%;
   z-index: 10;
-  color: var(--text-light, #f5f5f5);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.close-tooltip-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  color: #ecf0f1;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+}
+
+.close-tooltip-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .website-tooltip h3 {
   margin-top: 0;
-  margin-bottom: 5px;
-  font-size: 1.2rem;
+  margin-bottom: 10px;
+  color: #ecf0f1;
 }
 
 .website-tooltip p {
-  margin-top: 0;
-  margin-bottom: 10px;
-  font-size: 0.8rem;
-  color: var(--text-light-secondary, #b8b8d4);
+  margin-bottom: 15px;
+  color: #b3c1d1;
+}
+
+.website-tooltip a {
+  color: #3498db;
+  text-decoration: none;
+}
+
+.website-tooltip a:hover {
+  text-decoration: underline;
 }
 
 .grade-badge {
   display: inline-block;
   padding: 5px 10px;
   border-radius: 5px;
-  font-weight: bold;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   color: white;
+  font-weight: bold;
 }
 
 .criteria-list {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
 .criteria-list h4 {
   margin-top: 0;
   margin-bottom: 10px;
-  font-size: 1rem;
+  color: #ecf0f1;
 }
 
 .criteria-list ul {
@@ -180,38 +231,36 @@
 
 .criteria-list li {
   margin-bottom: 5px;
-  font-size: 0.9rem;
+  color: #b3c1d1;
 }
 
 .view-details-btn {
-  background-color: var(--accent, #7e57c2);
+  background-color: #3498db;
   color: white;
   border: none;
-  border-radius: 5px;
   padding: 8px 15px;
+  border-radius: 5px;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-weight: bold;
   transition: background-color 0.2s ease;
-  width: 100%;
 }
 
 .view-details-btn:hover {
-  background-color: var(--accent-dark, #5e35b1);
+  background-color: #2980b9;
 }
 
 .graph-legend {
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
+  flex-wrap: wrap;
   gap: 15px;
+  margin-top: 20px;
 }
 
 .legend-item {
   display: flex;
   align-items: center;
   margin-right: 15px;
-  font-size: 0.9rem;
-  color: var(--text-light, #f5f5f5);
 }
 
 .legend-color {
@@ -221,49 +270,71 @@
   margin-right: 5px;
 }
 
-/* Grade colors */
-.grade-a {
-  background-color: #4CAF50;
-  box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+.legend-color.grade-a {
+  background-color: #27ae60;
 }
 
-.grade-b {
-  background-color: #8BC34A;
-  box-shadow: 0 0 10px rgba(139, 195, 74, 0.5);
+.legend-color.grade-b {
+  background-color: #2980b9;
 }
 
-.grade-c {
-  background-color: #FFC107;
-  box-shadow: 0 0 10px rgba(255, 193, 7, 0.5);
+.legend-color.grade-c {
+  background-color: #f39c12;
 }
 
-.grade-d {
-  background-color: #FF9800;
-  box-shadow: 0 0 10px rgba(255, 152, 0, 0.5);
+.legend-color.grade-d {
+  background-color: #e67e22;
 }
 
-.grade-f {
-  background-color: #F44336;
-  box-shadow: 0 0 10px rgba(244, 67, 54, 0.5);
+.legend-color.grade-f {
+  background-color: #e74c3c;
+}
+
+.legend-item span {
+  color: #ecf0f1;
+  font-size: 0.9rem;
 }
 
 @media (max-width: 768px) {
   .graph {
-    height: 400px;
+    height: 350px;
+  }
+  
+  .website-dot {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .graph-container h2 {
+    font-size: 1.5rem;
+  }
+  
+  .graph-description {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .graph {
+    height: 300px;
+  }
+  
+  .website-dot {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .website-tooltip {
+    width: 250px;
   }
   
   .graph-legend {
     flex-direction: column;
     align-items: center;
+    gap: 8px;
   }
   
   .legend-item {
     margin-right: 0;
-    margin-bottom: 5px;
-  }
-  
-  .website-tooltip {
-    width: 90%;
-    max-width: 280px;
   }
 }
